@@ -5,6 +5,7 @@ pub mod auth;
 pub mod config;
 pub mod errors;
 pub mod routes;
+pub mod wrappers;
 
 use crate::config::Config;
 use crate::errors::TalliiError;
