@@ -1,12 +1,10 @@
 use sqlx::postgres::PgPoolOptions;
 use std::sync::Arc;
 
+pub mod auth;
 pub mod config;
-pub mod db;
 pub mod errors;
-pub mod handlers;
 pub mod routes;
-pub mod token;
 
 use crate::config::Config;
 use crate::errors::TalliiError;
