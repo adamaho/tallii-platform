@@ -15,8 +15,8 @@ use crate::ResponseResult;
 pub fn init(
     pool: Arc<PgPool>, // database pool
 ) -> impl Filter<Extract = impl warp::Reply, Error = Infallible> + Clone {
-    AuthRoutes::authorize()
-        .or(AuthRoutes::login(pool.clone()))
+
+    AuthRoutes::init(pool.clone())
         .with(warp::log("tallii-platform"))
         .recover(handle_rejection)
 }
