@@ -5,7 +5,6 @@ use jsonwebtoken::TokenData;
 use sqlx::PgPool;
 use warp::Filter;
 
-use crate::config::Config;
 use crate::errors::{handle_rejection, TalliiError};
 use crate::handlers;
 use crate::token::Claims;
@@ -14,13 +13,10 @@ use crate::ResponseResult;
 /// Combines all of the routes together
 pub fn init(
     pool: Arc<PgPool>, // database pool
-    config: Config,
 ) -> impl Filter<Extract = impl warp::Reply, Error = Infallible> + Clone {
     authorize()
-        .or(challenge(client.clone()))
         .or(login(pool.clone()))
-        .or(refresh(pool.clone()))
-        .with(warp::log("tallii-auth"))
+        .with(warp::log("tallii-platform"))
         .recover(handle_rejection)
 }
 
@@ -49,9 +45,9 @@ fn with_auth() -> impl Filter<Extract = (TokenData<Claims>,), Error = warp::Reje
 }
 
 /// Extracts claims from request in the Authorization header
-fn with_claims() -> impl Filter<Extract = (TokenData<Claims>,), Error = warp::Rejection> + Clone {
-    warp::header::headers_cloned().and_then(decode_jwt)
-}
+// fn with_claims() -> impl Filter<Extract = (TokenData<Claims>,), Error = warp::Rejection> + Clone {
+//     warp::header::headers_cloned().and_then(decode_jwt)
+// }
 
 /// Extracts database pool
 fn with_pool(
@@ -61,21 +57,21 @@ fn with_pool(
 }
 
 /// Extracts config
-fn with_config(
-    config: Config,
-) -> impl Filter<Extract = (Config,), Error = std::convert::Infallible> + Clone {
-    warp::any().map(move || config.clone())
-}
+// fn with_config(
+//     config: Config,
+// ) -> impl Filter<Extract = (Config,), Error = std::convert::Infallible> + Clone {
+//     warp::any().map(move || config.clone())
+// }
 
 /// Validates the jwt token
-async fn decode_jwt(
-    headers: warp::http::HeaderMap<warp::http::HeaderValue>,
-) -> ResponseResult<TokenData<Claims>> {
-    match jwt_from_headers(&headers) {
-        Ok(token) => Claims::decode_jwt(token.to_string()).map_err(|e| warp::reject::custom(e)),
-        Err(_) => Err(warp::reject::custom(TalliiError::MissingBearerToken)),
-    }
-}
+// async fn decode_jwt(
+//     headers: warp::http::HeaderMap<warp::http::HeaderValue>,
+// ) -> ResponseResult<TokenData<Claims>> {
+//     match jwt_from_headers(&headers) {
+//         Ok(token) => Claims::decode_jwt(token.to_string()).map_err(|e| warp::reject::custom(e)),
+//         Err(_) => Err(warp::reject::custom(TalliiError::MissingBearerToken)),
+//     }
+// }
 
 /// Validates the jwt token
 async fn validate_jwt(

@@ -1,4 +1,3 @@
-use log::info;
 use sqlx::PgPool;
 
 use crate::errors::{TalliiError};

@@ -1,11 +1,8 @@
-use redis::Client;
-
 use sqlx::postgres::PgPoolOptions;
 use std::sync::Arc;
 
 pub mod config;
 pub mod db;
-pub mod email;
 pub mod errors;
 pub mod handlers;
 pub mod routes;
@@ -31,11 +28,8 @@ async fn main() -> Result<()> {
         .await
         .expect("Failed to connect to database.");
 
-    // init redis client
-    let client = Client::open(config.redis_url.clone()).expect("Failed to connect to redis.");
-
     // init the routes
-    let routes = routes::init(Arc::new(pool), client.clone(), config.clone());
+    let routes = routes::init(Arc::new(pool));
 
     // start the warp server
     warp::serve(routes).run(([0, 0, 0, 0], 5000)).await;

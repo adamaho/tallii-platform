@@ -5,10 +5,7 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize, Clone)]
 pub struct Config {
     pub database_url: String,
-    pub redis_url: String,
     pub jwt_secret: String,
-    pub aws_ses_urn: String,
-    pub aws_ses_email: String,
 }
 
 impl Config {
