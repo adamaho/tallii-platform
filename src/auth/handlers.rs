@@ -4,9 +4,9 @@ use serde::Deserialize;
 use sqlx::PgPool;
 use validator::Validate;
 
-use crate::db::User;
+use crate::auth::db::User;
+use crate::auth::token::{Claims, TokenResponse};
 use crate::errors::TalliiError;
-use crate::token::{Claims, TokenResponse};
 use crate::ResponseResult;
 
 #[derive(Deserialize, Validate)]
@@ -16,10 +16,7 @@ pub struct LoginPayload {
 }
 
 /// Handle logging in
-pub async fn login(
-    payload: LoginPayload,
-    pool: Arc<PgPool>,
-) -> ResponseResult<impl warp::Reply> {
+pub async fn login(payload: LoginPayload, pool: Arc<PgPool>) -> ResponseResult<impl warp::Reply> {
     // validate the request payload
     payload
         .validate()
@@ -33,9 +30,7 @@ pub async fn login(
         Claims::generate_jwt(&user.email, &user.user_id).map_err(|e| warp::reject::custom(e))?;
 
     // create response
-    let response = TokenResponse {
-        access_token
-    };
+    let response = TokenResponse { access_token };
 
     // respond with the access and refresh tokens
     Ok(warp::reply::json(&response))

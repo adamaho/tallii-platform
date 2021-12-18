@@ -1,6 +1,6 @@
 use sqlx::PgPool;
 
-use crate::errors::{TalliiError};
+use crate::errors::TalliiError;
 use crate::Result;
 
 /// Representation of a user in the database

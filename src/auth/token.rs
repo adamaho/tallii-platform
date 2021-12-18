@@ -1,5 +1,7 @@
 use chrono::{Duration, Utc};
-use jsonwebtoken::{decode, encode, dangerous_insecure_decode, DecodingKey, EncodingKey, Header, Validation};
+use jsonwebtoken::{
+    dangerous_insecure_decode, decode, encode, DecodingKey, EncodingKey, Header, Validation,
+};
 use serde::{Deserialize, Serialize};
 
 use crate::errors::TalliiError;
@@ -16,7 +18,6 @@ pub struct Claims {
 impl Claims {
     /// Decodes and verifies the provided token to the Token struct
     pub fn verify_jwt(token: String) -> Result<jsonwebtoken::TokenData<Claims>> {
-
         // get secret from env
         let secret = std::env::var("JWT_SECRET").expect("JWT_SECRET not set");
 
@@ -32,10 +33,7 @@ impl Claims {
 
     /// Decodes the provided token to the Token struct with no verification
     pub fn decode_jwt(token: String) -> Result<jsonwebtoken::TokenData<Claims>> {
-
-        match dangerous_insecure_decode::<Claims>(
-            &token
-        ) {
+        match dangerous_insecure_decode::<Claims>(&token) {
             Ok(claims) => Ok(claims),
             Err(_) => Err(TalliiError::InvalidToken),
         }
@@ -70,5 +68,5 @@ impl Claims {
 
 #[derive(Serialize)]
 pub struct TokenResponse {
-    pub access_token: String
+    pub access_token: String,
 }
