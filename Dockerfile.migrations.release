@@ -1,0 +1,30 @@
+FROM clux/muslrust:latest as builder
+WORKDIR /usr/src
+RUN rustup target add x86_64-unknown-linux-musl
+RUN USER=root cargo new migrations
+
+RUN apt-get update && apt-get install -y openssl libssl-dev clang llvm-dev libclang-dev
+
+# build the sqlx binary
+RUN cargo install --target x86_64-unknown-linux-musl --version=0.5.2 sqlx-cli --no-default-features --features postgres
+
+FROM alpine
+WORKDIR /root
+
+# move the migrations into the image
+COPY migrations ./migrations
+
+# move the migrations script in
+COPY scripts/run_migrations.sh .
+
+# make it executable
+RUN chmod +x run_migrations.sh
+
+# move the sqlx binary into the local bin
+COPY --from=builder /root/.cargo/bin/sqlx /usr/local/bin
+
+# put the cargo.toml in the right spot
+COPY Cargo.toml ./
+
+EXPOSE 8000
+ENTRYPOINT ["./run_migrations.sh"]

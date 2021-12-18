@@ -1,0 +1,28 @@
+FROM clux/muslrust:latest as builder
+WORKDIR /usr/src
+RUN rustup target add x86_64-unknown-linux-musl
+RUN USER=root cargo new tallii-auth
+
+RUN apt-get update && apt-get install -y openssl libssl-dev clang llvm-dev libclang-dev
+RUN update-ca-certificates
+
+# cache the deps
+WORKDIR /usr/src/tallii-auth
+COPY Cargo.toml Cargo.lock ./
+RUN cargo build --release
+
+# build the binary
+COPY src ./src
+RUN cargo install --target x86_64-unknown-linux-musl --path .
+
+FROM scratch
+
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+
+WORKDIR /root
+
+# move the tallii-auth binary into the local bin
+COPY --from=builder /usr/src/tallii-auth/target/x86_64-unknown-linux-musl/release/tallii-auth .
+
+EXPOSE 5000
+ENTRYPOINT ["./tallii-auth"]

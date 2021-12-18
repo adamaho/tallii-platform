@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tallii-platform
+  labels:
+    app: tallii-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tallii-platform
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: tallii-platform
+    spec:
+      containers:
+      - name: tallii-platform
+        image: <IMAGE>
+        ports:
+        - containerPort: 5000
+        env:
+        - name: RUST_LOG
+          value: tallii-platform
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: tallii-platform-db
+              key: url
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: tallii-jwt-secret
+              key: data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tallii-platform-svc
+spec:
+  selector:
+    app: tallii-platform
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000

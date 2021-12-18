@@ -1,0 +1,21 @@
+[package]
+name = "tallii-platform"
+version = "0.1.0"
+authors = ["Adam Aho <adam.aho@hey.com>"]
+edition = "2018"
+
+[dependencies]
+config = "0.11.0"
+chrono = { version = "0.4.19", features = ["serde"] }
+dotenv = "0.15.0"
+jsonwebtoken = "7.2.0"
+log = "0.4.14"
+pretty_env_logger = "0.4.0"
+serde = { version = "1.0.132", features = ["derive"] }
+serde_json = "1.0.73"
+sqlx = { version = "0.5.9", features = [ "runtime-tokio-native-tls", "macros", "postgres", "uuid", "chrono" ] }
+thiserror = "1.0.30"
+tokio = { version = "1.15.0", features = ["full"] }
+uuid = { version = "0.8.2", features = ["serde", "v4"] }
+validator = { version = "0.14", features = ["derive"] }
+warp = "0.3.2"
