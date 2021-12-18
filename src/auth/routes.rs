@@ -6,13 +6,15 @@ use warp::Filter;
 
 use crate::auth::handlers;
 use crate::auth::token::Claims;
-use crate::routes::{with_auth, with_pool};
+use crate::wrappers::{with_auth, with_pool};
 
 pub struct AuthRoutes;
 
 impl AuthRoutes {
     /// Init the auth routes
-    pub fn init(pool: Arc<PgPool>) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+    pub fn init(
+        pool: Arc<PgPool>,
+    ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
         let auth_routes = authorize().or(login(pool.clone()));
 
         auth_routes
