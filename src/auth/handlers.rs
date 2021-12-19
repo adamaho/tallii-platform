@@ -1,12 +1,11 @@
 use std::sync::Arc;
 
-use argon2::{self, Config};
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use validator::Validate;
 
 use super::db::{User, UserResponse};
-use super::token::{Claims, TokenResponse};
+use super::token::Claims;
 use crate::errors::TalliiError;
 use crate::ResponseResult;
 
