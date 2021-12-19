@@ -13,7 +13,7 @@ pub struct User {
     pub created_at: chrono::NaiveDateTime,
 }
 
-/// Representation of a user in the database
+/// Representation of a user without the password for a response
 #[derive(sqlx::FromRow, serde::Serialize)]
 pub struct UserResponse {
     pub user_id: i32,
@@ -23,30 +23,6 @@ pub struct UserResponse {
 }
 
 impl User {
-    /// Creates a user in the database
-    pub async fn get_or_create(conn: &PgPool, email: &str) -> Result<User> {
-        if let Some(user) = User::get_by_email_option(conn, email).await? {
-            return Ok(user);
-        } else {
-            let user = sqlx::query_as::<_, User>(
-                r#"
-                insert into
-                    users (email)
-                values
-                    ($1)
-                returning
-                    *
-            "#,
-            )
-            .bind(email)
-            .fetch_one(conn)
-            .await
-            .map_err(|e| TalliiError::DatabaseError(e.to_string()))?;
-
-            return Ok(user);
-        }
-    }
-
     /// Gets a user by their email
     pub async fn get_by_email_option(conn: &PgPool, email: &str) -> Result<Option<User>> {
         sqlx::query_as::<_, User>(
@@ -99,5 +75,27 @@ impl User {
         .fetch_one(conn)
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
+    }
+
+    /// Creates an email
+    pub async fn create_user(conn: &PgPool, username: &str, email: &str, hash: &str) -> Result<User> {
+        let user = sqlx::query_as::<_, User>(
+            r#"
+            insert into
+                users (username, email, password)
+            values
+                ($1, $2, $3)
+            returning
+                *
+        "#,
+        )
+        .bind(username)
+        .bind(email)
+        .bind(hash)
+        .fetch_one(conn)
+        .await
+        .map_err(|e| TalliiError::DatabaseError(e.to_string()))?;
+
+        Ok(user)
     }
 }

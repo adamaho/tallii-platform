@@ -6,9 +6,15 @@ use validator::Validate;
 
 use super::db::{User, UserResponse};
 use super::token::Claims;
+
 use crate::errors::TalliiError;
+use crate::config::Config;
 use crate::ResponseResult;
 
+
+//////////////////////////////////////////////////
+/// Log user in
+//////////////////////////////////////////////////
 #[derive(Deserialize, Validate)]
 pub struct LoginPayload {
     #[validate(email)]
@@ -23,7 +29,6 @@ pub struct LoginResponse {
     user: UserResponse,
 }
 
-/// Checks the users email and password and responds with an access token
 pub async fn login(payload: LoginPayload, pool: Arc<PgPool>) -> ResponseResult<impl warp::Reply> {
     // validate the request payload
     payload
@@ -64,4 +69,56 @@ pub async fn login(payload: LoginPayload, pool: Arc<PgPool>) -> ResponseResult<i
         }
         None => Err(warp::reject::custom(TalliiError::Unauthorized)),
     }
+}
+
+//////////////////////////////////////////////////
+/// sign user up
+//////////////////////////////////////////////////
+#[derive(Deserialize, Validate)]
+pub struct SignupPayload {
+    #[validate(length(min = 3))]
+    username: String,
+    #[validate(email)]
+    email: String,
+    #[validate(length(min = 6))]
+    password: String,
+}
+
+pub async fn signup(payload: SignupPayload, pool: Arc<PgPool>, config: Config) -> ResponseResult<impl warp::Reply> {
+    // validate the request payload
+    payload
+        .validate()
+        .map_err(|e| warp::reject::custom(TalliiError::ValidationError(e.to_string())))?;
+    
+    // check if user with email exists
+    let user = User::get_by_email_option(&*pool, &payload.email).await?;
+
+    // if the user exists, return an error denoting that the email already exists
+    if user.is_some() {
+        return Err(warp::reject::custom(TalliiError::UserEmailTaken));
+    }
+
+    // create the hashed password
+    let argon_config = argon2::Config::default();
+    let hash = argon2::hash_encoded(payload.password.as_bytes(), &config.salt.as_bytes(), &argon_config).unwrap();
+
+    // insert the user
+    let created_user = User::create_user(&*pool, &payload.username, &payload.email, &hash).await?;
+
+    // create the access token
+    let access_token = Claims::generate_jwt(&created_user.email, &created_user.user_id)
+        .map_err(|e| warp::reject::custom(e))?;
+
+    // create response
+    let response = LoginResponse {
+        access_token,
+        user: UserResponse {
+            user_id: created_user.user_id,
+            username: created_user.username,
+            email: created_user.email,
+            created_at: created_user.created_at
+        }
+    };
+
+    Ok(warp::reply::json(&response))
 }

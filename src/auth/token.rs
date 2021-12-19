@@ -44,9 +44,9 @@ impl Claims {
         // get secret from env
         let secret = std::env::var("JWT_SECRET").expect("JWT_SECRET not set");
 
-        // expire the token in 5 minutes
-        let now = Utc::now() + Duration::minutes(15);
-
+        // expire the token in 7 days
+        let now = Utc::now() + Duration::days(7);
+        
         // create the claims
         let claims = Claims {
             sub: user_id.clone(),

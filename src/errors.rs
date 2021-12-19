@@ -14,22 +14,25 @@ pub struct ErrorResponse {
 /// Representation of all potential application errors
 #[derive(Error, Debug)]
 pub enum TalliiError {
-    #[error("Failed to execute database query")]
+    #[error("failed to execute database query")]
     DatabaseError(String),
 
-    #[error("Couldn't reach mars. Check back later.")]
+    #[error("couldn't reach mars. check back later.")]
     InternalServerError(String),
 
-    #[error("Invalid credentials")]
+    #[error("invalid credentials")]
     Unauthorized,
 
-    #[error("Missing Bearer token")]
+    #[error("user email taken")]
+    UserEmailTaken,
+
+    #[error("missing bearer token")]
     MissingBearerToken,
 
-    #[error("The provided token is invalid")]
+    #[error("the provided token is invalid")]
     InvalidToken,
 
-    #[error("Validation error: {0}")]
+    #[error("validation error: {0}")]
     ValidationError(String),
 }
 
@@ -67,19 +70,24 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                 message = format!("{:?}", error);
                 code = String::from("VALIDATION_ERROR");
             }
+            TalliiError::UserEmailTaken => {
+                status_code = StatusCode::UNAUTHORIZED;
+                message = "the provide email has been taken.".to_string();
+                code = String::from("USER_EMAIL_TAKEN");
+            }
             TalliiError::Unauthorized => {
                 status_code = StatusCode::UNAUTHORIZED;
-                message = "The provided credentials are invalid.".to_string();
+                message = "the provided credentials are invalid.".to_string();
                 code = String::from("UNAUTHORIZED");
             }
             TalliiError::MissingBearerToken => {
                 status_code = StatusCode::UNAUTHORIZED;
-                message = "Missing Bearer token.".to_string();
+                message = "missing bearer token.".to_string();
                 code = String::from("UNAUTHORIZED");
             }
             TalliiError::InvalidToken => {
                 status_code = StatusCode::UNAUTHORIZED;
-                message = "The provided token is invalid.".to_string();
+                message = "the provided token is invalid.".to_string();
                 code = String::from("UNAUTHORIZED");
             }
         }

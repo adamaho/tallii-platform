@@ -28,7 +28,7 @@ async fn main() -> Result<()> {
         .expect("Failed to connect to database.");
 
     // init the routes
-    let routes = routes::init(Arc::new(pool));
+    let routes = routes::init(Arc::new(pool), config.clone());
 
     // start the warp server
     warp::serve(routes).run(([0, 0, 0, 0], 5000)).await;

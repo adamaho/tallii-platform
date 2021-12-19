@@ -11,5 +11,17 @@ POST http://localhost:5000/v1/login HTTP/1.1
 content-type: application/json
 
 {
-    "email": "bryanneg@gmail.com"
+    "email": "bryanneg@gmail.com",
+    "password": "ilovesweetie"
+}
+
+###
+
+POST http://localhost:5000/v1/signup HTTP/1.1
+content-type: application/json
+
+{
+    "username": "bubba",
+    "email": "bryanneg@gmail.com",
+    "password": "ilovesweetie"
 }
