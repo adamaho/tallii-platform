@@ -13,6 +13,15 @@ pub struct User {
     pub created_at: chrono::NaiveDateTime,
 }
 
+/// Representation of a user in the database
+#[derive(sqlx::FromRow, serde::Serialize)]
+pub struct UserResponse {
+    pub user_id: i32,
+    pub username: String,
+    pub email: String,
+    pub created_at: chrono::NaiveDateTime,
+}
+
 impl User {
     /// Creates a user in the database
     pub async fn get_or_create(conn: &PgPool, email: &str) -> Result<User> {

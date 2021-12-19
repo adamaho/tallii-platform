@@ -1,24 +1,27 @@
 use std::sync::Arc;
 
-use serde::Deserialize;
+use argon2::{self, Config};
+use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use validator::Validate;
-use argon2::{self, Config};
 
-use crate::auth::db::User;
-use crate::auth::token::{Claims, TokenResponse};
+use super::db::{User, UserResponse};
+use super::token::{Claims, TokenResponse};
 use crate::errors::TalliiError;
 use crate::ResponseResult;
 
-/// ------------------------------------
-/// Log in
-/// ------------------------------------
 #[derive(Deserialize, Validate)]
 pub struct LoginPayload {
     #[validate(email)]
     email: String,
     #[validate(length(min = 6))]
     password: String,
+}
+
+#[derive(Serialize)]
+pub struct LoginResponse {
+    access_token: String,
+    user: UserResponse,
 }
 
 /// Checks the users email and password and responds with an access token
@@ -43,17 +46,23 @@ pub async fn login(payload: LoginPayload, pool: Arc<PgPool>) -> ResponseResult<i
             }
 
             // create a new jwt
-            let access_token =
-                Claims::generate_jwt(&user.email, &user.user_id).map_err(|e| warp::reject::custom(e))?;
-        
+            let access_token = Claims::generate_jwt(&user.email, &user.user_id)
+                .map_err(|e| warp::reject::custom(e))?;
+
             // create response
-            let response = TokenResponse { access_token };
-        
+            let response = LoginResponse {
+                access_token,
+                user: UserResponse {
+                    user_id: user.user_id,
+                    username: user.username,
+                    email: user.email,
+                    created_at: user.created_at,
+                },
+            };
+
             // respond with the access and refresh tokens
-            return Ok(warp::reply::json(&response))
+            return Ok(warp::reply::json(&response));
         }
-        None => {
-            Err(warp::reject::custom(TalliiError::Unauthorized))
-        }
+        None => Err(warp::reject::custom(TalliiError::Unauthorized)),
     }
 }
