@@ -7,7 +7,9 @@ use crate::Result;
 #[derive(sqlx::FromRow, serde::Serialize)]
 pub struct User {
     pub user_id: i32,
+    pub username: String,
     pub email: String,
+    pub password: String,
     pub created_at: chrono::NaiveDateTime,
 }
 
