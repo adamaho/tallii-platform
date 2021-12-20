@@ -40,7 +40,7 @@ async fn decode_jwt(
     headers: warp::http::HeaderMap<warp::http::HeaderValue>,
 ) -> ResponseResult<TokenData<Claims>> {
     match jwt_from_headers(&headers) {
-        Ok(token) => Claims::decode_jwt(token.to_string()).map_err(|e| warp::reject::custom(e)),
+        Ok(token) => Claims::verify_jwt(token.to_string()).map_err(|e| warp::reject::custom(e)),
         Err(_) => Err(warp::reject::custom(TalliiError::MissingBearerToken)),
     }
 }

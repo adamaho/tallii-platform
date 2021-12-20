@@ -4,7 +4,9 @@ use std::sync::Arc;
 pub mod auth;
 pub mod config;
 pub mod errors;
+pub mod games;
 pub mod routes;
+pub mod scoreboards;
 pub mod wrappers;
 
 use crate::config::Config;

@@ -1,6 +1,6 @@
 use chrono::{Duration, Utc};
 use jsonwebtoken::{
-    dangerous_insecure_decode, decode, encode, DecodingKey, EncodingKey, Header, Validation,
+    decode, encode, DecodingKey, EncodingKey, Header, Validation,
 };
 use serde::{Deserialize, Serialize};
 
@@ -26,14 +26,6 @@ impl Claims {
             &DecodingKey::from_secret(&secret.as_bytes()),
             &Validation::default(),
         ) {
-            Ok(claims) => Ok(claims),
-            Err(_) => Err(TalliiError::InvalidToken),
-        }
-    }
-
-    /// Decodes the provided token to the Token struct with no verification
-    pub fn decode_jwt(token: String) -> Result<jsonwebtoken::TokenData<Claims>> {
-        match dangerous_insecure_decode::<Claims>(&token) {
             Ok(claims) => Ok(claims),
             Err(_) => Err(TalliiError::InvalidToken),
         }

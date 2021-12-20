@@ -25,3 +25,50 @@ content-type: application/json
     "email": "bryanneg@gmail.com",
     "password": "ilovesweetie"
 }
+
+###
+
+POST http://localhost:5000/v1/scoreboards HTTP/1.1
+Authorization: Bearer
+
+{
+    "name": "christmas 2021",
+    "game_id": 1,
+    "teams": [
+        {
+            "team_id": 1
+        },
+        {
+            "team_id": 2
+        }
+    ]
+}
+
+###
+
+POST http://localhost:5000/v1/teams HTTP/1.1
+Authorization: Bearer
+
+{
+    "name": "hill beaves",
+}
+
+###
+
+GET http://localhost:5000/v1/games HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
+
+###
+
+POST http://localhost:5000/v1/games HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
+
+{
+    "name": "hello"
+}
+
+###
+
+GET http://localhost:5000/v1/games/1 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
+
