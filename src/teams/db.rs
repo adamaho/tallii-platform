@@ -13,7 +13,8 @@ pub struct Team {
 
 #[derive(Deserialize)]
 pub struct CreateTeamPayload {
-    pub name: String
+    pub name: String,
+    pub scoreboard_id: i32,
 }
 
 impl Team {
@@ -57,14 +58,15 @@ impl Team {
         sqlx::query_as::<_, Team>(
             r#"
                 insert into
-                    teams (name)
+                    teams (name, scoreboard_id)
                 values
-                    ($1)
+                    ($1, $2)
                 returning
                     *
             "#
         )
         .bind(&payload.name)
+        .bind(&payload.scoreboard_id)
         .fetch_one(conn)
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))

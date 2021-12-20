@@ -43,7 +43,8 @@ POST http://localhost:5000/v1/teams HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
 
 {
-    "name": "hello"
+    "name": "hello",
+    "scoreboard_id": 1
 }
 
 ###
