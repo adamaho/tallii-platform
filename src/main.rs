@@ -7,6 +7,7 @@ pub mod errors;
 pub mod games;
 pub mod routes;
 pub mod scoreboards;
+pub mod teams;
 pub mod wrappers;
 
 use crate::config::Config;
