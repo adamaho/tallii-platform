@@ -15,7 +15,7 @@ create table games (
 create table scoreboards (
     scoreboard_id serial primary key,
     name text not null,
-    game integer not null references games(game_id),
+    game_id integer not null references games(game_id),
     created_by integer not null references users(user_id),
     created_at timestamp not null default current_timestamp
 );
