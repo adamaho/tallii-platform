@@ -1,0 +1,140 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Tallii Platform
+  description: Platform Service for tallii.io
+  contact:
+    name: Tallii Engineering
+    email: adam.aho@hey.com
+    url: https://tallii.io
+
+paths:
+  /v1/login:
+    post:
+      operationId: postLogin
+      summary: accepts an email and password and returns an access token and the user info.
+      requestBody:
+        description: login model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequestModel'
+      responses:
+        '200':
+          description: access token and user info
+          $ref: '#/components/responses/LoginSignupResponse'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /v1/signup:
+    post:
+      operationId: postSignup
+      summary: accepts an email, password and username and returns an access token and the user info.
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: signup model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequestModel'
+      responses:
+        '200':
+          description: access token and user info
+          $ref: '#/components/responses/LoginSignupResponse'
+        '401':
+          description: The provided refresh token is invalid
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    LoginSignupResponse:
+      description: access token and user info
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserInfoModel'
+  schemas:
+    ErrorModel:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+    LoginRequestModel:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+    SignupRequestModel:
+      type: object
+      properties:
+        email:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - username
+        - password
+    LoginSignupResponseModel:
+      type: object
+      properties:
+        access_token:
+          type: string
+        user:
+          type: object
+          properties:
+            schema:
+              $ref: '#/components/schemas/UserInfoModel'
+      required:
+        - access_token
+        - user
+    UserInfoModel:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        created_at:
+          type: string
+          format: date-time
