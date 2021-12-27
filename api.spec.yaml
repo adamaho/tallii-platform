@@ -30,8 +30,6 @@ paths:
     post:
       operationId: postSignup
       summary: accepts an email, password and username and returns an access token and the user info.
-      security:
-        - bearerAuth: []
       requestBody:
         description: signup model
         required: true
@@ -78,7 +76,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/UserInfoModel'
+            $ref: '#/components/schemas/LoginSignupResponseModel'
   schemas:
     ErrorModel:
       type: object
@@ -121,20 +119,15 @@ components:
         user:
           type: object
           properties:
-            schema:
-              $ref: '#/components/schemas/UserInfoModel'
-      required:
-        - access_token
-        - user
-    UserInfoModel:
-      type: object
-      properties:
-        user_id:
-          type: integer
-        username:
-          type: string
-        email:
-          type: string
-        created_at:
-          type: string
-          format: date-time
+            user_id:
+              type: integer
+            username:
+              type: string
+            email:
+              type: string
+            created_at:
+              type: string
+              format: date-time
+          required:
+            - access_token
+            - user

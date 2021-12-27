@@ -1,66 +1,66 @@
 
 # Endpoint that should be called to verify a jwt
-GET http://localhost:5000/v1/authorize HTTP/1.1
+GET http://localhost:6000/v1/authorize HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRhbS5haG9AaGV5LmNvbSIsImV4cCI6MTYxNzE1NTkyM30.nyScMB9hLnAqCs032plO9ffjfu2uKseKZq1lV6NOYwM
 content-type: application/json
 
 
 ###
 
-POST http://localhost:5000/v1/login HTTP/1.1
+POST http://localhost:6000/v1/login HTTP/1.1
 content-type: application/json
 
 {
-    "email": "bryanneg@gmail.com",
-    "password": "ilovesweetie"
+    "email": "adam.aho@gmail.com",
+    "password": "bubba1"
 }
 
 ###
 
-POST http://localhost:5000/v1/signup HTTP/1.1
+POST http://localhost:6000/v1/signup HTTP/1.1
 content-type: application/json
 
 {
-    "username": "bubba",
-    "email": "bryanneg@gmail.com",
-    "password": "ilovesweetie"
+    "username": "adam",
+    "email": "adam.aho@gmail.com",
+    "password": "bubba1"
 }
 
 ###
 
-GET http://localhost:5000/v1/scoreboards HTTP/1.1
+GET http://localhost:6000/v1/scoreboards HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
 
 ###
 
-GET http://localhost:5000/v1/scoreboards/1 HTTP/1.1
+GET http://localhost:6000/v1/scoreboards/1 HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
 
 
 ###
 
-POST http://localhost:5000/v1/scoreboards HTTP/1.1
+POST http://localhost:6000/v1/scoreboards HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
 
 {
     "name": "christmas 2021",
     "game_id": 1
 }
-
+`
 ###
 
-GET http://localhost:5000/v1/teams HTTP/1.1
+GET http://localhost:6000/v1/teams HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
 
 ###
 
-GET http://localhost:5000/v1/teams/1 HTTP/1.1
+GET http://localhost:6000/v1/teams/1 HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
 
 
 ###
 
-POST http://localhost:5000/v1/teams HTTP/1.1
+POST http://localhost:6000/v1/teams HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
 
 {
@@ -70,12 +70,12 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsI
 
 ###
 
-GET http://localhost:5000/v1/games HTTP/1.1
+GET http://localhost:6000/v1/games HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
 
 ###
 
-POST http://localhost:5000/v1/games HTTP/1.1
+POST http://localhost:6000/v1/games HTTP/1.1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
 
 {

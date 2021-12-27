@@ -34,7 +34,7 @@ async fn main() -> Result<()> {
     let routes = routes::init(Arc::new(pool), config.clone());
 
     // start the warp server
-    warp::serve(routes).run(([0, 0, 0, 0], 5000)).await;
+    warp::serve(routes).run(([0, 0, 0, 0], 6000)).await;
 
     Ok(())
 }
