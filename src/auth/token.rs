@@ -37,7 +37,7 @@ impl Claims {
         let secret = std::env::var("JWT_SECRET").expect("JWT_SECRET not set");
 
         // expire the token in 7 days
-        let now = Utc::now() + Duration::days(7);
+        let now = Utc::now() + Duration::days(30);
         
         // create the claims
         let claims = Claims {

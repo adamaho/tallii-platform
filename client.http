@@ -1,7 +1,7 @@
 
 # Endpoint that should be called to verify a jwt
 GET http://localhost:6000/v1/authorize HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRhbS5haG9AaGV5LmNvbSIsImV4cCI6MTYxNzE1NTkyM30.nyScMB9hLnAqCs032plO9ffjfu2uKseKZq1lV6NOYwM
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImVtYWlsIjoiYWRhbS5haG9AZ21haWwuY29tIiwiZXhwIjoxNjQxMjQ2OTI3fQ.UJwU4-V17jzsWLROxI4ASx1fJ-Z0Txh77VJeqhrDYZg
 content-type: application/json
 
 
