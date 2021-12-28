@@ -20,7 +20,10 @@ pub struct CreateScoreboardPayload {
 
 impl Scoreboard {
     /// fetches all scoreboards
-    pub async fn get_scoreboards_by_user_id(conn: &PgPool, user_id: &i32) -> Result<Vec<Scoreboard>> {
+    pub async fn get_scoreboards_by_user_id(
+        conn: &PgPool,
+        user_id: &i32,
+    ) -> Result<Vec<Scoreboard>> {
         sqlx::query_as::<_, Scoreboard>(
             r#"
                 select

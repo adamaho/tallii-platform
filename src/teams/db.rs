@@ -55,14 +55,13 @@ impl Team {
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
 
-
     /// fetches all teams for many scoreboard ids
     pub async fn get_teams_by_scoreboard_created_by(
-      conn: &PgPool,
-      user_id: &i32,
-  ) -> Result<Vec<Team>> {
-      sqlx::query_as::<_, Team>(
-          r#"
+        conn: &PgPool,
+        user_id: &i32,
+    ) -> Result<Vec<Team>> {
+        sqlx::query_as::<_, Team>(
+            r#"
               select
                   team_id, t.scoreboard_id, t.name, t.created_at
               from
@@ -74,11 +73,11 @@ impl Team {
               where
                   s.created_by = $1
               "#,
-      )
-      .bind(user_id)
-      .fetch_all(conn)
-      .await
-      .map_err(|e| TalliiError::DatabaseError(e.to_string()))
+        )
+        .bind(user_id)
+        .fetch_all(conn)
+        .await
+        .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
 
     /// fetches a single team
