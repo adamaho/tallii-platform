@@ -20,15 +20,19 @@ pub struct CreateScoreboardPayload {
 
 impl Scoreboard {
     /// fetches all scoreboards
-    pub async fn get_scoreboards(conn: &PgPool) -> Result<Vec<Scoreboard>> {
+    pub async fn get_scoreboards_by_user_id(conn: &PgPool, user_id: &i32) -> Result<Vec<Scoreboard>> {
         sqlx::query_as::<_, Scoreboard>(
             r#"
                 select
                     *
                 from
                     scoreboards
+                where
+                    created_by = $1
+                
             "#,
         )
+        .bind(user_id)
         .fetch_all(conn)
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))

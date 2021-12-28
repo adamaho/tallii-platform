@@ -1,9 +1,12 @@
 use std::sync::Arc;
+use std::collections::HashMap;
 use futures::future;
 
 use jsonwebtoken::TokenData;
 use serde::Serialize;
 use sqlx::PgPool;
+
+use itertools::Itertools;
 
 use crate::auth::token::Claims;
 use crate::ResponseResult;
@@ -19,7 +22,7 @@ pub struct ScoreboardResponse {
     pub name: String,
     pub created_by: auth::db::UserResponse,
     pub created_at: chrono::NaiveDateTime,
-    pub teams: Vec<teams::db::Team>,
+    pub teams: Option<Vec<teams::db::Team>>,
 }
 
 /// creates a scoreboard
@@ -56,17 +59,55 @@ pub async fn get_scoreboard(
         name: scoreboard.name,
         created_by: auth::db::UserResponse { user_id: user.user_id, username: user.username, email: user.email, created_at: user.created_at },
         created_at: scoreboard.created_at,
-        teams,
+        teams: Some(teams),
     };
 
     Ok(warp::reply::json(&scoreboard_response))
 }
 
-/// gets all scoreboards
+/// gets all scoreboards where the created_by is the current user
 pub async fn get_scoreboards(
     pool: Arc<PgPool>,
-    _token: TokenData<Claims>,
+    token: TokenData<Claims>,
 ) -> ResponseResult<impl warp::Reply> {
-    let scoreboards = db::Scoreboard::get_scoreboards(&pool).await?;
-    Ok(warp::reply::json(&scoreboards))
+
+    // get all scoreboards for current user
+    let scoreboards_future = db::Scoreboard::get_scoreboards_by_user_id(&pool, &token.claims.sub);
+
+    // get all teams for the scoreboards of the current user
+    let teams_future = teams::db::Team::get_teams_by_scoreboard_created_by(&pool, &token.claims.sub);
+
+    // get the current user info
+    let user_future = auth::db::User::get_by_user_id(&pool, &token.claims.sub);
+
+    // run the queries in parallel
+    let (scoreboards, teams, user) = future::try_join3(scoreboards_future, teams_future, user_future).await?;
+
+    // group the teams into a hashmap
+    let mut grouped_teams: HashMap<i32, Vec<teams::db::Team>> = HashMap::new();
+    for (scoreboard_id, teams) in &teams.into_iter().group_by(|team| team.scoreboard_id) {
+      grouped_teams.insert(scoreboard_id, teams.collect::<Vec<teams::db::Team>>());
+    }
+
+    // build the response 
+    let mut response: Vec<ScoreboardResponse> = Vec::new();
+
+    for scoreboard in scoreboards.into_iter() {
+      response.push(ScoreboardResponse {
+        scoreboard_id: scoreboard.scoreboard_id,
+        name: scoreboard.name,
+        created_at: scoreboard.created_at,
+        created_by: auth::db::UserResponse {
+          user_id: user.user_id,
+          username: user.username.clone(),
+          email: user.email.clone(),
+          created_at: user.created_at
+        },
+        // the remove is used to get teh value itself instead of the borrowed reference
+        teams: grouped_teams.remove(&scoreboard.scoreboard_id)
+      });
+    }
+  
+    // get all teams for the scoreboards
+    Ok(warp::reply::json(&response))
 }

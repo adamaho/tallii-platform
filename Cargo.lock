@@ -1595,6 +1595,7 @@ dependencies = [
  "config",
  "dotenv",
  "futures",
+ "itertools",
  "jsonwebtoken",
  "log",
  "pretty_env_logger",

@@ -4,9 +4,10 @@ use sqlx::{FromRow, PgPool};
 use crate::errors::TalliiError;
 use crate::Result;
 
-#[derive(FromRow, Serialize)]
+#[derive(FromRow, Serialize, Debug)]
 pub struct Team {
     pub team_id: i32,
+    pub scoreboard_id: i32,
     pub name: String,
     pub created_at: chrono::NaiveDateTime,
 }
@@ -52,6 +53,32 @@ impl Team {
         .fetch_all(conn)
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
+    }
+
+
+    /// fetches all teams for many scoreboard ids
+    pub async fn get_teams_by_scoreboard_created_by(
+      conn: &PgPool,
+      user_id: &i32,
+  ) -> Result<Vec<Team>> {
+      sqlx::query_as::<_, Team>(
+          r#"
+              select
+                  team_id, t.scoreboard_id, t.name, t.created_at
+              from
+                  teams t
+              inner join
+                  scoreboards s
+              on
+                  t.scoreboard_id = s.scoreboard_id
+              where
+                  s.created_by = $1
+              "#,
+      )
+      .bind(user_id)
+      .fetch_all(conn)
+      .await
+      .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
 
     /// fetches a single team

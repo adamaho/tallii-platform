@@ -29,7 +29,7 @@ content-type: application/json
 ###
 
 GET http://localhost:6000/v1/scoreboards HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImVtYWlsIjoiYWRhbS5haG9AZ21haWwuY29tIiwiZXhwIjoxNjQxMjQ2OTI3fQ.UJwU4-V17jzsWLROxI4ASx1fJ-Z0Txh77VJeqhrDYZg
 
 ###
 
@@ -40,13 +40,13 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImVtYWlsI
 ###
 
 POST http://localhost:6000/v1/scoreboards HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImVtYWlsIjoiYWRhbS5haG9AZ21haWwuY29tIiwiZXhwIjoxNjQxMjQ2OTI3fQ.UJwU4-V17jzsWLROxI4ASx1fJ-Z0Txh77VJeqhrDYZg
 
 {
     "name": "christmas 2021",
     "game_id": 1
 }
-`
+
 ###
 
 GET http://localhost:6000/v1/teams HTTP/1.1
@@ -61,11 +61,11 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsI
 ###
 
 POST http://localhost:6000/v1/teams HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImVtYWlsIjoiYWRhbS5haG9AZ21haWwuY29tIiwiZXhwIjoxNjQxMjQ2OTI3fQ.UJwU4-V17jzsWLROxI4ASx1fJ-Z0Txh77VJeqhrDYZg
 
 {
-    "name": "hello",
-    "scoreboard_id": 1
+    "name": "hello2",
+    "scoreboard_id": 9
 }
 
 ###
