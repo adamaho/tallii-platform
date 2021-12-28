@@ -8,7 +8,6 @@ use crate::config::Config;
 use crate::errors::handle_rejection;
 
 use crate::auth::routes::AuthRoutes;
-use crate::games::routes::GameRoutes;
 use crate::scoreboards::routes::ScoreboardRoutes;
 use crate::teams::routes::TeamRoutes;
 
@@ -19,7 +18,6 @@ pub fn init(
 ) -> impl Filter<Extract = impl warp::Reply, Error = Infallible> + Clone {
     AuthRoutes::init(pool.clone(), config.clone())
         .or(ScoreboardRoutes::init(pool.clone()))
-        .or(GameRoutes::init(pool.clone()))
         .or(TeamRoutes::init(pool.clone()))
         .with(warp::log("tallii-platform"))
         .recover(handle_rejection)

@@ -3,44 +3,42 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use jsonwebtoken::TokenData;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 
 use itertools::Itertools;
 
 use crate::auth::token::Claims;
-use crate::ResponseResult;
+use crate::teams::db::CreateTeamPayload;
+use crate::{ResponseResult, Result};
 
 use super::db;
 
 use crate::auth;
+use crate::errors::TalliiError;
 use crate::teams;
+
+#[derive(Deserialize)]
+pub struct CreateScoreboardPayload {
+    pub name: String,
+    pub game: String,
+    pub teams: Vec<CreateTeamPayload>,
+}
 
 #[derive(Serialize)]
 pub struct ScoreboardResponse {
     pub scoreboard_id: i32,
     pub name: String,
+    pub game: String,
     pub created_by: auth::db::UserResponse,
     pub created_at: chrono::NaiveDateTime,
     pub teams: Option<Vec<teams::db::Team>>,
 }
 
-/// creates a scoreboard
-pub async fn create_scoreboard(
-    payload: db::CreateScoreboardPayload,
+async fn get_scoreboard_response(
     pool: Arc<PgPool>,
-    token: TokenData<Claims>,
-) -> ResponseResult<impl warp::Reply> {
-    let scoreboard = db::Scoreboard::create_scoreboard(&pool, &payload, &token.claims.sub).await?;
-    Ok(warp::reply::json(&scoreboard))
-}
-
-/// gets a single scoreboard
-pub async fn get_scoreboard(
-    scoreboard_id: i32,
-    pool: Arc<PgPool>,
-    _token: TokenData<Claims>,
-) -> ResponseResult<impl warp::Reply> {
+    scoreboard_id: &i32,
+) -> Result<ScoreboardResponse> {
     // get the scoreboard future
     let scoreboard_future = db::Scoreboard::get_scoreboard(&pool, &scoreboard_id);
 
@@ -54,9 +52,10 @@ pub async fn get_scoreboard(
     let user = auth::db::User::get_by_user_id(&pool, &scoreboard.created_by).await?;
 
     // create the response
-    let scoreboard_response = ScoreboardResponse {
+    Ok(ScoreboardResponse {
         scoreboard_id: scoreboard.scoreboard_id,
         name: scoreboard.name,
+        game: scoreboard.game,
         created_by: auth::db::UserResponse {
             user_id: user.user_id,
             username: user.username,
@@ -65,7 +64,47 @@ pub async fn get_scoreboard(
         },
         created_at: scoreboard.created_at,
         teams: Some(teams),
-    };
+    })
+}
+
+/// creates a scoreboard
+pub async fn create_scoreboard(
+    payload: CreateScoreboardPayload,
+    pool: Arc<PgPool>,
+    token: TokenData<Claims>,
+) -> ResponseResult<impl warp::Reply> {
+    // get the transaction
+    let mut tx = pool
+        .begin()
+        .await
+        .map_err(|_err| warp::reject::custom(TalliiError::SQLXError))?;
+
+    // create scoreboard
+    let scoreboard =
+        db::Scoreboard::create_scoreboard_tx(&mut tx, &payload, &token.claims.sub).await?;
+
+    // create teams
+    teams::db::Team::create_teams(&mut tx, &payload.teams, &scoreboard.scoreboard_id).await?;
+
+    // commit the transaction
+    tx.commit()
+        .await
+        .map_err(|_err| warp::reject::custom(TalliiError::SQLXError))?;
+
+    // create the response
+    let response = get_scoreboard_response(pool, &scoreboard.scoreboard_id).await?;
+
+    // this response should be the same as the get scoreboard response
+    Ok(warp::reply::json(&response))
+}
+
+/// gets a single scoreboard
+pub async fn get_scoreboard(
+    scoreboard_id: i32,
+    pool: Arc<PgPool>,
+    _token: TokenData<Claims>,
+) -> ResponseResult<impl warp::Reply> {
+    let scoreboard_response = get_scoreboard_response(pool.clone(), &scoreboard_id).await?;
 
     Ok(warp::reply::json(&scoreboard_response))
 }
@@ -102,6 +141,7 @@ pub async fn get_scoreboards(
         response.push(ScoreboardResponse {
             scoreboard_id: scoreboard.scoreboard_id,
             name: scoreboard.name,
+            game: scoreboard.game,
             created_at: scoreboard.created_at,
             created_by: auth::db::UserResponse {
                 user_id: user.user_id,

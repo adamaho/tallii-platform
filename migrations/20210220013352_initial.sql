@@ -6,16 +6,10 @@ create table users (
     created_at timestamp not null default current_timestamp
 );
 
-create table games (
-    game_id serial primary key,
-    name text not null,
-    created_at timestamp not null default current_timestamp
-);
-
 create table scoreboards (
     scoreboard_id serial primary key,
     name text not null,
-    game_id integer not null references games(game_id),
+    game text not null,
     created_by integer not null references users(user_id),
     created_at timestamp not null default current_timestamp
 );

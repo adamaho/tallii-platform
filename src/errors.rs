@@ -14,6 +14,9 @@ pub struct ErrorResponse {
 /// Representation of all potential application errors
 #[derive(Error, Debug)]
 pub enum TalliiError {
+    #[error("something went wrong with sqlx")]
+    SQLXError,
+
     #[error("failed to execute database query")]
     DatabaseError(String),
 
@@ -89,6 +92,11 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                 status_code = StatusCode::UNAUTHORIZED;
                 message = "the provided token is invalid.".to_string();
                 code = String::from("UNAUTHORIZED");
+            }
+            TalliiError::SQLXError => {
+                status_code = StatusCode::INTERNAL_SERVER_ERROR;
+                message = "something went wrong with the database".to_string();
+                code = String::from("INTERNAL_SERVER_ERROR");
             }
         }
     } else if let Some(_) = err.find::<warp::reject::MethodNotAllowed>() {

@@ -1,4 +1,4 @@
-@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImVtYWlsIjoiYWRhbS5haG9AZ21haWwuY29tIiwiZXhwIjoxNjQxMjQ2OTI3fQ.UJwU4-V17jzsWLROxI4ASx1fJ-Z0Txh77VJeqhrDYZg
+@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRhbS5haG9AZ21haWwuY29tIiwiZXhwIjoxNjQzMzE2NjU5fQ.IAEVjTDAg1KoWqs699TXGviaqi0ZD4jvSQSBJykDGnY
 
 
 # Endpoint that should be called to verify a jwt
@@ -46,40 +46,15 @@ Authorization: Bearer {{ token }}
 
 {
   "name": "christmas 2021",
-  "game_id": 1
+  "game": "euchure",
+  "teams": [
+    {
+      "name": "team1"
+    },
+    {
+      "name": "team2"
+    }
+  ]
 }
 
-###
 
-GET http://localhost:6000/v1/teams HTTP/1.1
-Authorization: Bearer {{ token }}
-
-###
-
-GET http://localhost:6000/v1/teams/1 HTTP/1.1
-Authorization: Bearer {{ token }}
-
-
-###
-
-POST http://localhost:6000/v1/teams HTTP/1.1
-Authorization: Bearer {{ token }}
-
-{
-  "name": "hello2",
-  "scoreboard_id": 9
-}
-
-###
-
-GET http://localhost:6000/v1/games HTTP/1.1
-Authorization: Bearer {{ token }}
-
-###
-
-POST http://localhost:6000/v1/games HTTP/1.1
-Authorization: Bearer {{ token }}
-
-{
-  "name": "hello"
-}

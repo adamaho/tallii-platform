@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use sqlx::{FromRow, PgPool};
+use sqlx::{FromRow, PgPool, Postgres, Transaction};
 
 use crate::errors::TalliiError;
 use crate::Result;
@@ -15,7 +15,6 @@ pub struct Team {
 #[derive(Deserialize)]
 pub struct CreateTeamPayload {
     pub name: String,
-    pub scoreboard_id: i32,
 }
 
 impl Team {
@@ -98,21 +97,37 @@ impl Team {
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
 
-    /// creates a team
-    pub async fn create_team(conn: &PgPool, payload: &CreateTeamPayload) -> Result<Team> {
+    /// creates many teams
+    pub async fn create_teams(
+        tx: &mut Transaction<'_, Postgres>,
+        teams: &Vec<CreateTeamPayload>,
+        scoreboard_id: &i32,
+    ) -> Result<Team> {
+        let mut names: Vec<&str> = Vec::new();
+        let mut scoreboard_ids: Vec<i32> = Vec::new();
+        let owned_scoreboard_id = scoreboard_id.to_owned();
+
+        // create the values
+        for team in teams.iter() {
+            names.push(&team.name);
+            scoreboard_ids.push(owned_scoreboard_id);
+        }
+
         sqlx::query_as::<_, Team>(
             r#"
                 insert into
                     teams (name, scoreboard_id)
-                values
-                    ($1, $2)
+                select
+                    *
+                from
+                    unnest($1, $2)
                 returning
                     *
             "#,
         )
-        .bind(&payload.name)
-        .bind(&payload.scoreboard_id)
-        .fetch_one(conn)
+        .bind(names)
+        .bind(scoreboard_ids)
+        .fetch_one(tx)
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
