@@ -15,7 +15,7 @@ use crate::teams::routes::TeamRoutes;
 /// Combines all of the routes together
 pub fn init(
     pool: Arc<PgPool>, // database pool
-    config: Config, // config
+    config: Config,    // config
 ) -> impl Filter<Extract = impl warp::Reply, Error = Infallible> + Clone {
     AuthRoutes::init(pool.clone(), config.clone())
         .or(ScoreboardRoutes::init(pool.clone()))

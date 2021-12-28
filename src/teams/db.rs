@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use sqlx::{PgPool, FromRow};
+use sqlx::{FromRow, PgPool};
 
 use crate::errors::TalliiError;
 use crate::Result;
@@ -18,7 +18,6 @@ pub struct CreateTeamPayload {
 }
 
 impl Team {
-
     /// fetches all teams
     pub async fn get_teams(conn: &PgPool) -> Result<Vec<Team>> {
         sqlx::query_as::<_, Team>(
@@ -27,13 +26,33 @@ impl Team {
                     *
                 from
                     teams
-            "#
+            "#,
         )
         .fetch_all(conn)
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
 
+    /// fetches all teams for a specific scoreboard
+    pub async fn get_teams_by_scoreboard_id(
+        conn: &PgPool,
+        scoreboard_id: &i32,
+    ) -> Result<Vec<Team>> {
+        sqlx::query_as::<_, Team>(
+            r#"
+                select
+                    *
+                from
+                    teams
+                where
+                    scoreboard_id = $1
+                "#,
+        )
+        .bind(scoreboard_id)
+        .fetch_all(conn)
+        .await
+        .map_err(|e| TalliiError::DatabaseError(e.to_string()))
+    }
 
     /// fetches a single team
     pub async fn get_team(conn: &PgPool, team_id: &i32) -> Result<Team> {
@@ -45,7 +64,7 @@ impl Team {
                     teams
                 where
                     team_id = $1
-            "#
+                "#,
         )
         .bind(team_id)
         .fetch_one(conn)
@@ -63,7 +82,7 @@ impl Team {
                     ($1, $2)
                 returning
                     *
-            "#
+            "#,
         )
         .bind(&payload.name)
         .bind(&payload.scoreboard_id)

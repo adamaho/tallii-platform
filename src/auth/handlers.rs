@@ -7,10 +7,9 @@ use validator::Validate;
 use super::db::{User, UserResponse};
 use super::token::Claims;
 
-use crate::errors::TalliiError;
 use crate::config::Config;
+use crate::errors::TalliiError;
 use crate::ResponseResult;
-
 
 //////////////////////////////////////////////////
 /// Log user in
@@ -84,12 +83,16 @@ pub struct SignupPayload {
     password: String,
 }
 
-pub async fn signup(payload: SignupPayload, pool: Arc<PgPool>, config: Config) -> ResponseResult<impl warp::Reply> {
+pub async fn signup(
+    payload: SignupPayload,
+    pool: Arc<PgPool>,
+    config: Config,
+) -> ResponseResult<impl warp::Reply> {
     // validate the request payload
     payload
         .validate()
         .map_err(|e| warp::reject::custom(TalliiError::ValidationError(e.to_string())))?;
-    
+
     // check if user with email exists
     let user = User::get_by_email_option(&*pool, &payload.email).await?;
 
@@ -100,7 +103,12 @@ pub async fn signup(payload: SignupPayload, pool: Arc<PgPool>, config: Config) -
 
     // create the hashed password
     let argon_config = argon2::Config::default();
-    let hash = argon2::hash_encoded(payload.password.as_bytes(), &config.salt.as_bytes(), &argon_config).unwrap();
+    let hash = argon2::hash_encoded(
+        payload.password.as_bytes(),
+        &config.salt.as_bytes(),
+        &argon_config,
+    )
+    .unwrap();
 
     // insert the user
     let created_user = User::create_user(&*pool, &payload.username, &payload.email, &hash).await?;
@@ -116,8 +124,8 @@ pub async fn signup(payload: SignupPayload, pool: Arc<PgPool>, config: Config) -
             user_id: created_user.user_id,
             username: created_user.username,
             email: created_user.email,
-            created_at: created_user.created_at
-        }
+            created_at: created_user.created_at,
+        },
     };
 
     Ok(warp::reply::json(&response))

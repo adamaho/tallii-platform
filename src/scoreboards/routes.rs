@@ -13,13 +13,15 @@ impl ScoreboardRoutes {
     pub fn init(
         pool: Arc<PgPool>,
     ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-        create_scoreboard(pool.clone()).or(get_scoreboards(pool.clone())).or(get_scoreboard(pool.clone()))
+        create_scoreboard(pool.clone())
+            .or(get_scoreboards(pool.clone()))
+            .or(get_scoreboard(pool.clone()))
     }
 }
 
 /// creates a scoreboard
 pub fn create_scoreboard(
-    pool: Arc<PgPool>
+    pool: Arc<PgPool>,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "scoreboards")
         .and(warp::post())
@@ -31,7 +33,7 @@ pub fn create_scoreboard(
 
 /// gets a single
 pub fn get_scoreboard(
-    pool: Arc<PgPool>
+    pool: Arc<PgPool>,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "scoreboards" / i32)
         .and(warp::get())
@@ -42,7 +44,7 @@ pub fn get_scoreboard(
 
 /// gets all scoreboards
 pub fn get_scoreboards(
-    pool: Arc<PgPool>
+    pool: Arc<PgPool>,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "scoreboards")
         .and(warp::get())

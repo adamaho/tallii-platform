@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use sqlx::{PgPool, FromRow};
+use sqlx::{FromRow, PgPool};
 
 use crate::errors::TalliiError;
 use crate::Result;
@@ -13,11 +13,10 @@ pub struct Game {
 
 #[derive(Deserialize)]
 pub struct CreateGamePayload {
-    pub name: String
+    pub name: String,
 }
 
 impl Game {
-
     /// fetches all games
     pub async fn get_games(conn: &PgPool) -> Result<Vec<Game>> {
         sqlx::query_as::<_, Game>(
@@ -26,13 +25,12 @@ impl Game {
                     *
                 from
                     games
-            "#
+            "#,
         )
         .fetch_all(conn)
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
-
 
     /// fetches a single game
     pub async fn get_game(conn: &PgPool, game_id: &i32) -> Result<Game> {
@@ -44,7 +42,7 @@ impl Game {
                     games
                 where
                     game_id = $1
-            "#
+            "#,
         )
         .bind(game_id)
         .fetch_one(conn)
@@ -62,7 +60,7 @@ impl Game {
                     ($1)
                 returning
                     *
-            "#
+            "#,
         )
         .bind(&payload.name)
         .fetch_one(conn)

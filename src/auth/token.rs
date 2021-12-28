@@ -1,7 +1,5 @@
 use chrono::{Duration, Utc};
-use jsonwebtoken::{
-    decode, encode, DecodingKey, EncodingKey, Header, Validation,
-};
+use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 
 use crate::errors::TalliiError;
@@ -38,7 +36,7 @@ impl Claims {
 
         // expire the token in 7 days
         let now = Utc::now() + Duration::days(30);
-        
+
         // create the claims
         let claims = Claims {
             sub: user_id.clone(),

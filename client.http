@@ -33,8 +33,8 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsI
 
 ###
 
-GET http://localhost:6000/v1/scoreboards/1 HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYnJ5YW5uZWdAZ21haWwuY29tIiwiZXhwIjoxNjQwNjQ0OTkyfQ.EolVhr6vWtIoaJxv3f3t158XHXvdcNqH1i_AAWylqxI
+GET http://localhost:6000/v1/scoreboards/3 HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImVtYWlsIjoiYWRhbS5haG9AZ21haWwuY29tIiwiZXhwIjoxNjQxMjQ2OTI3fQ.UJwU4-V17jzsWLROxI4ASx1fJ-Z0Txh77VJeqhrDYZg
 
 
 ###

@@ -78,7 +78,12 @@ impl User {
     }
 
     /// Creates an email
-    pub async fn create_user(conn: &PgPool, username: &str, email: &str, hash: &str) -> Result<User> {
+    pub async fn create_user(
+        conn: &PgPool,
+        username: &str,
+        email: &str,
+        hash: &str,
+    ) -> Result<User> {
         let user = sqlx::query_as::<_, User>(
             r#"
             insert into

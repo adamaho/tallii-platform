@@ -13,13 +13,15 @@ impl GameRoutes {
     pub fn init(
         pool: Arc<PgPool>,
     ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-        create_game(pool.clone()).or(get_games(pool.clone())).or(get_game(pool.clone()))
+        create_game(pool.clone())
+            .or(get_games(pool.clone()))
+            .or(get_game(pool.clone()))
     }
 }
 
 /// creates a game
 pub fn create_game(
-    pool: Arc<PgPool>
+    pool: Arc<PgPool>,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "games")
         .and(warp::post())
@@ -31,7 +33,7 @@ pub fn create_game(
 
 /// gets a single
 pub fn get_game(
-    pool: Arc<PgPool>
+    pool: Arc<PgPool>,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "games" / i32)
         .and(warp::get())
@@ -42,7 +44,7 @@ pub fn get_game(
 
 /// gets all games
 pub fn get_games(
-    pool: Arc<PgPool>
+    pool: Arc<PgPool>,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "games")
         .and(warp::get())

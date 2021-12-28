@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use sqlx::{PgPool, FromRow};
+use sqlx::{FromRow, PgPool};
 
 use crate::errors::TalliiError;
 use crate::Result;
@@ -15,11 +15,10 @@ pub struct Scoreboard {
 #[derive(Deserialize)]
 pub struct CreateScoreboardPayload {
     pub name: String,
-    pub game_id: i32
+    pub game_id: i32,
 }
 
 impl Scoreboard {
-
     /// fetches all scoreboards
     pub async fn get_scoreboards(conn: &PgPool) -> Result<Vec<Scoreboard>> {
         sqlx::query_as::<_, Scoreboard>(
@@ -28,13 +27,12 @@ impl Scoreboard {
                     *
                 from
                     scoreboards
-            "#
+            "#,
         )
         .fetch_all(conn)
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
-
 
     /// fetches a single scoreboard
     pub async fn get_scoreboard(conn: &PgPool, scoreboard_id: &i32) -> Result<Scoreboard> {
@@ -46,7 +44,7 @@ impl Scoreboard {
                     scoreboards
                 where
                     scoreboard_id = $1
-            "#
+            "#,
         )
         .bind(scoreboard_id)
         .fetch_one(conn)
@@ -55,7 +53,11 @@ impl Scoreboard {
     }
 
     /// creates a scoreboard
-    pub async fn create_scoreboard(conn: &PgPool, payload: &CreateScoreboardPayload, user_id: &i32) -> Result<Scoreboard> {
+    pub async fn create_scoreboard(
+        conn: &PgPool,
+        payload: &CreateScoreboardPayload,
+        user_id: &i32,
+    ) -> Result<Scoreboard> {
         sqlx::query_as::<_, Scoreboard>(
             r#"
                 insert into
@@ -64,7 +66,7 @@ impl Scoreboard {
                     ($1, $2, $3)
                 returning
                     *
-            "#
+            "#,
         )
         .bind(&payload.name)
         .bind(&payload.game_id)

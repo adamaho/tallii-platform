@@ -4,10 +4,10 @@ use jsonwebtoken::TokenData;
 use sqlx::PgPool;
 use warp::Filter;
 
-use crate::config::Config;
 use super::handlers;
 use super::token::Claims;
-use crate::wrappers::{with_auth, with_pool, with_config};
+use crate::config::Config;
+use crate::wrappers::{with_auth, with_config, with_pool};
 
 pub struct AuthRoutes;
 
@@ -15,9 +15,10 @@ impl AuthRoutes {
     /// Init the auth routes
     pub fn init(
         pool: Arc<PgPool>,
-        config: Config
+        config: Config,
     ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-        let auth_routes = authorize().or(login(pool.clone()).or(signup(pool.clone(), config.clone())));
+        let auth_routes =
+            authorize().or(login(pool.clone()).or(signup(pool.clone(), config.clone())));
 
         auth_routes
     }
@@ -45,7 +46,7 @@ pub fn login(
 /// Signs a user up
 pub fn signup(
     pool: Arc<PgPool>,
-    config: Config
+    config: Config,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "signup")
         .and(warp::post())

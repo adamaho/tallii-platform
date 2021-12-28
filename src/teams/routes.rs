@@ -13,13 +13,15 @@ impl TeamRoutes {
     pub fn init(
         pool: Arc<PgPool>,
     ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-        create_team(pool.clone()).or(get_teams(pool.clone())).or(get_team(pool.clone()))
+        create_team(pool.clone())
+            .or(get_teams(pool.clone()))
+            .or(get_team(pool.clone()))
     }
 }
 
 /// creates a team
 pub fn create_team(
-    pool: Arc<PgPool>
+    pool: Arc<PgPool>,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "teams")
         .and(warp::post())
@@ -31,7 +33,7 @@ pub fn create_team(
 
 /// gets a single
 pub fn get_team(
-    pool: Arc<PgPool>
+    pool: Arc<PgPool>,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "teams" / i32)
         .and(warp::get())
@@ -42,7 +44,7 @@ pub fn get_team(
 
 /// gets all teams
 pub fn get_teams(
-    pool: Arc<PgPool>
+    pool: Arc<PgPool>,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "teams")
         .and(warp::get())
