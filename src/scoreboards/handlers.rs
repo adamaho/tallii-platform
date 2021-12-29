@@ -1,4 +1,5 @@
 use futures::future;
+use warp::hyper::StatusCode;
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -95,7 +96,7 @@ pub async fn create_scoreboard(
     let response = get_scoreboard_response(pool, &scoreboard.scoreboard_id).await?;
 
     // this response should be the same as the get scoreboard response
-    Ok(warp::reply::json(&response))
+    Ok(warp::reply::with_status(warp::reply::json(&response), StatusCode::CREATED))
 }
 
 /// gets a single scoreboard
@@ -156,4 +157,25 @@ pub async fn get_me_scoreboards(
 
     // get all teams for the scoreboards
     Ok(warp::reply::json(&response))
+}
+
+/// deletes a specific scorebaord
+pub async fn delete_scoreboard(
+    scoreboard_id: i32,
+    pool: Arc<PgPool>,
+    token: TokenData<Claims>,
+) -> ResponseResult<impl warp::Reply> {
+    // get the scoreboard
+    let scoreboard = db::Scoreboard::get_scoreboard(&pool, &scoreboard_id).await?;
+
+    // if the creator is not the same as the requester, forbid the action
+    if scoreboard.created_by != token.claims.sub {
+        return Err(warp::reject::custom(TalliiError::Forbidden));
+    }
+
+    // delete the scoreboard
+    db::Scoreboard::delete_scoreboard(&pool, &scoreboard_id).await?;
+
+    // response with the scoreboard deleted
+    Ok(warp::reply::with_status("scoreboard deleted", StatusCode::OK))
 }

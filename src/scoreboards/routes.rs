@@ -16,6 +16,7 @@ impl ScoreboardRoutes {
         create_scoreboard(pool.clone())
             .or(get_me_scoreboards(pool.clone()))
             .or(get_scoreboard(pool.clone()))
+            .or(delete_scoreboard(pool.clone()))
     }
 }
 
@@ -51,4 +52,16 @@ pub fn get_me_scoreboards(
         .and(with_pool(pool.clone()))
         .and(with_auth())
         .and_then(handlers::get_me_scoreboards)
+}
+
+
+/// deletes the provided user
+pub fn delete_scoreboard(
+    pool: Arc<PgPool>,
+) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+    warp::path!("v1" / "scoreboards" / i32)
+        .and(warp::delete())
+        .and(with_pool(pool.clone()))
+        .and(with_auth())
+        .and_then(handlers::delete_scoreboard)
 }

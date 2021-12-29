@@ -26,6 +26,9 @@ pub enum TalliiError {
     #[error("invalid credentials")]
     Unauthorized,
 
+    #[error("not allowed to perform this action")]
+    Forbidden,
+
     #[error("user email taken")]
     UserEmailTaken,
 
@@ -92,6 +95,11 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                 status_code = StatusCode::UNAUTHORIZED;
                 message = "the provided token is invalid.".to_string();
                 code = String::from("UNAUTHORIZED");
+            }
+            TalliiError::Forbidden => {
+                status_code = StatusCode::FORBIDDEN;
+                message = "not allowed to perform this action.".to_string();
+                code = String::from("FORBIDDEN");
             }
             TalliiError::SQLXError => {
                 status_code = StatusCode::INTERNAL_SERVER_ERROR;

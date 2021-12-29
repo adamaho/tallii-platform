@@ -78,7 +78,74 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         default:
           $ref: '#/components/responses/InternalServerError'
-
+  /v1/scoreboards/{scoreboard_id}:
+    parameters:
+      - in: path
+        name: scoreboard_id
+        schema:
+          type: integer
+        required: true
+        description: the specific scoreboard_id
+    get:
+      operationId: getScoreboard
+      summary: gets a specific scoreboard
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: the specific scoreboard
+          $ref: '#/components/responses/GetScoreboardResponse'
+        401:
+          description: the provided token is invalid
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      operationId: deleteScoreboard
+      summary: deletes a specific scoreboard
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: the specific scoreboard
+        401:
+          description: the provided token is invalid
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          description: the user is not allowed to perform this action
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /v1/teams/{team_id}:
+    parameters:
+      - in: path
+        name: team_id
+        schema:
+          type: integer
+        required: true
+        description: the specific team_id
+    put:
+      operationId: updateTeam
+      summary: updates the specific team
+      requestBody:
+        description: update team model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTeamModel'
+      responses:
+        200:
+          description: access token and user info
+          $ref: '#/components/responses/TeamResponse'
+        401:
+          description: the provided creds are invalid
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          description: the user is not allowed to perform this action
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
 components:
   securitySchemes:
     bearerAuth:
@@ -94,6 +161,12 @@ components:
             $ref: '#/components/schemas/ErrorModel'
     Unauthorized:
       description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorModel'
+    Forbidden:
+      description: Forbidden
       content:
         application/json:
           schema:
@@ -115,6 +188,16 @@ components:
       content:
         application/json:
           schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/components/schemas/ScoreboardModel'
+    GetScoreboardResponse:
+      description: scoreboard
+      content:
+        application/json:
+          schema:
+            type: object
             $ref: '#/components/schemas/ScoreboardModel'
   schemas:
     ErrorModel:
@@ -167,6 +250,11 @@ components:
             created_at:
               type: string
               format: date-time
+          required:
+            - user_id
+            - username
+            - email
+            - created_at
       required:
         - access_token
         - user
@@ -196,6 +284,8 @@ components:
           type: integer
         name:
           type: string
+        score:
+          type: integer
         created_at:
           type: string
           format: date-time
@@ -203,6 +293,7 @@ components:
         - team_id
         - scoreboard_id
         - name
+        - score
         - created_at
     ScoreboardModel:
       type: object
@@ -222,7 +313,6 @@ components:
         teams:
           type: array
           items:
-            type: object
             $ref: '#/components/schemas/TeamModel'
       required:
         - scoreboard_id
@@ -231,6 +321,14 @@ components:
         - created_by
         - created_at
         - teams
+    UpdateTeamRequestModel:
+      type: object
+      properties:
+        name:
+          type: string
+        score:
+          type: integer
+
     
 
 

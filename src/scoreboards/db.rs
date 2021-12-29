@@ -79,4 +79,25 @@ impl Scoreboard {
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
+
+    /// deletes a scoreboard
+    pub async fn delete_scoreboard(
+        pool: &PgPool,
+        scoreboard_id: &i32
+    ) -> Result<()> {
+        sqlx::query(
+            r#"
+            delete from
+                scoreboards
+            where
+                scoreboard_id = $1
+            "#
+        )
+        .bind(scoreboard_id)
+        .execute(pool)
+        .await
+        .map_err(|e| TalliiError::DatabaseError(e.to_string()))?;
+
+        Ok(())
+    }
 }

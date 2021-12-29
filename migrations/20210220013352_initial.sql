@@ -18,6 +18,7 @@ create table teams (
     team_id serial primary key,
     scoreboard_id integer not null references scoreboards(scoreboard_id) on delete cascade,
     name text not null,
+    score integer not null default 0,
     created_at timestamp not null default current_timestamp,
     unique(team_id, scoreboard_id)
 );

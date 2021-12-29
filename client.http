@@ -1,5 +1,4 @@
-@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRhbS5haG9AZ21haWwuY29tIiwiZXhwIjoxNjQzMzE2NjU5fQ.IAEVjTDAg1KoWqs699TXGviaqi0ZD4jvSQSBJykDGnY
-
+@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRhbS5haG9AaGV5LmNvbSIsImV4cCI6MTY0MzM4ODk1NX0.SBBCGPN74UTx-8E5AOBf8xFwnJ_xl7DEy6z1gihP3TI
 
 # Endpoint that should be called to verify a jwt
 GET http://localhost:6000/v1/authorize HTTP/1.1
@@ -13,8 +12,8 @@ POST http://localhost:6000/v1/login HTTP/1.1
 content-type: application/json
 
 {
-  "email": "adam.aho@gmail.com",
-  "password": "bubba1"
+  "email": "adam.aho@hey.com",
+  "password": "brazil"
 }
 
 ###
@@ -24,8 +23,8 @@ content-type: application/json
 
 {
   "username": "adam",
-  "email": "adam.aho@gmail.com",
-  "password": "bubba1"
+  "email": "adam.aho@hey.com",
+  "password": "brazil"
 }
 
 ###
@@ -45,16 +44,29 @@ POST http://localhost:6000/v1/scoreboards HTTP/1.1
 Authorization: Bearer {{ token }}
 
 {
-  "name": "christmas 2021",
-  "game": "euchure",
+  "name": "I love bryanne very much adasdasdasdasdasd",
+  "game": "backgammon",
   "teams": [
     {
-      "name": "team1"
+      "name": "hill beavers"
     },
     {
-      "name": "team2"
+      "name": "arctic lions"
     }
   ]
 }
 
+###
 
+DELETE http://localhost:6000/v1/scoreboards/1 HTTP/1.1
+Authorization: Bearer {{ token }}
+
+###
+
+PUT http://localhost:6000/v1/teams/7 HTTP/1.1
+Authorization: Bearer {{ token }}
+
+{
+  "name": "this is a name",
+  "score": 20
+}

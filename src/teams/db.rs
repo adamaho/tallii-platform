@@ -4,11 +4,14 @@ use sqlx::{FromRow, PgPool, Postgres, Transaction};
 use crate::errors::TalliiError;
 use crate::Result;
 
+use super::handlers::UpdateTeamRequest;
+
 #[derive(FromRow, Serialize, Debug)]
 pub struct Team {
     pub team_id: i32,
     pub scoreboard_id: i32,
     pub name: String,
+    pub score: i32,
     pub created_at: chrono::NaiveDateTime,
 }
 
@@ -128,6 +131,33 @@ impl Team {
         .bind(names)
         .bind(scoreboard_ids)
         .fetch_one(tx)
+        .await
+        .map_err(|e| TalliiError::DatabaseError(e.to_string()))
+    }
+
+    /// updates a specific team
+    pub async fn update_team(
+        pool: &PgPool,
+        team_id: &i32,
+        payload: &UpdateTeamRequest
+    ) -> Result<Team> {
+        sqlx::query_as::<_, Team>(
+            r#"
+                update
+                    teams
+                set
+                    name = $1,
+                    score = $2
+                where
+                    team_id = $3 
+                returning
+                    *
+            "#
+        )
+        .bind(&payload.name)
+        .bind(&payload.score)
+        .bind(team_id)
+        .fetch_one(pool)
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
