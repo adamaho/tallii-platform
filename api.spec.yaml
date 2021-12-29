@@ -133,11 +133,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateTeamModel'
+              $ref: '#/components/schemas/UpdateTeamRequestModel'
       responses:
         200:
           description: access token and user info
-          $ref: '#/components/responses/TeamResponse'
+          $ref: '#/components/responses/GetTeamResponse'
         401:
           description: the provided creds are invalid
           $ref: '#/components/responses/Unauthorized'
@@ -199,6 +199,13 @@ components:
           schema:
             type: object
             $ref: '#/components/schemas/ScoreboardModel'
+    GetTeamResponse:
+      description: team
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: '#/components/schemas/TeamModel'
   schemas:
     ErrorModel:
       type: object
