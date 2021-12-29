@@ -63,6 +63,28 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         default:
           $ref: '#/components/responses/InternalServerError'
+  /v1/scoreboards:
+    post:
+      operationId: createScoreboard
+      summary: creates a scoreboard
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: create scoreboard model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScoreboardRequestModel'
+      responses:
+        200:
+          description: the created scoreboard
+          $ref: '#/components/responses/CreateScoreboardResponse'
+        401:
+          description: the provided creds are invalid
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
   /v1/me/scoreboards:
     get:
       operationId: getMyScoreboards
@@ -193,6 +215,13 @@ components:
               type: object
               $ref: '#/components/schemas/ScoreboardModel'
     GetScoreboardResponse:
+      description: scoreboard
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: '#/components/schemas/ScoreboardModel'
+    CreateScoreboardResponse:
       description: scoreboard
       content:
         application/json:
@@ -335,6 +364,25 @@ components:
           type: string
         score:
           type: integer
+    CreateScoreboardRequestModel:
+      type: object
+      properties:
+        name:
+          type: string
+        game:
+          type: string
+        teams:
+          type: object
+          properties:
+            name:
+              type: string
+          required:
+            - name
+      required:
+        - name
+        - game
+        - teams
+
 
     
 
