@@ -63,6 +63,22 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         default:
           $ref: '#/components/responses/InternalServerError'
+  /v1/me/scoreboards:
+    get:
+      operationId: getMyScoreboards
+      summary: gets the scoreboards of the currently logged in user
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: the scoreboards of the currently logged in user
+          $ref: '#/components/responses/GetScoreboardsResponse'
+        401:
+          description: the provided token is invalid
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -94,6 +110,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/LoginSignupResponseModel'
+    GetScoreboardsResponse:
+      description: scoreboards
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ScoreboardModel'
   schemas:
     ErrorModel:
       type: object
@@ -148,3 +170,67 @@ components:
       required:
         - access_token
         - user
+    UserModel:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - user_id
+        - username
+        - email
+        - created_at
+    TeamModel:
+      type: object
+      properties:
+        team_id:
+          type: integer
+        scoreboard_id:
+          type: integer
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - team_id
+        - scoreboard_id
+        - name
+        - created_at
+    ScoreboardModel:
+      type: object
+      properties:
+        scoreboard_id:
+          type: integer
+        name:
+          type: string
+        game:
+          type: string
+        created_by:
+          type: object
+          $ref: '#/components/schemas/UserModel'
+        created_at:
+          type: string
+          format: date-time
+        teams:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/TeamModel'
+      required:
+        - scoreboard_id
+        - name
+        - game
+        - created_by
+        - created_at
+        - teams
+    
+
+

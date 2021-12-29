@@ -110,7 +110,7 @@ pub async fn get_scoreboard(
 }
 
 /// gets all scoreboards where the created_by is the current user
-pub async fn get_scoreboards(
+pub async fn get_me_scoreboards(
     pool: Arc<PgPool>,
     token: TokenData<Claims>,
 ) -> ResponseResult<impl warp::Reply> {
