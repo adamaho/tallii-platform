@@ -372,12 +372,14 @@ components:
         game:
           type: string
         teams:
-          type: object
-          properties:
-            name:
-              type: string
-          required:
-            - name
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+            required:
+              - name
       required:
         - name
         - game

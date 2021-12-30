@@ -65,7 +65,7 @@ impl Team {
         sqlx::query_as::<_, Team>(
             r#"
               select
-                  team_id, t.scoreboard_id, t.name, t.created_at
+                  team_id, t.scoreboard_id, t.name, t.score, t.created_at
               from
                   teams t
               inner join
