@@ -146,9 +146,28 @@ paths:
           type: integer
         required: true
         description: the specific team_id
+    get:
+      operationId: getTeam
+      summary: gets a specific team
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: access token and user info
+          $ref: '#/components/responses/GetTeamResponse'
+        401:
+          description: the provided creds are invalid
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          description: the user is not allowed to perform this action
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
     put:
       operationId: updateTeam
       summary: updates the specific team
+      security:
+        - bearerAuth: []
       requestBody:
         description: update team model
         required: true

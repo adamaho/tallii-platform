@@ -25,6 +25,9 @@ pub async fn get_team(
     _claims: TokenData<Claims>,
 ) -> ResponseResult<impl warp::Reply> {
     let team = db::Team::get_team(&pool, &team_id).await?;
+
+    // TODO check if the user has perms to get the team
+
     Ok(warp::reply::json(&team))
 }
 
@@ -34,6 +37,8 @@ pub async fn get_teams(
     _claims: TokenData<Claims>,
 ) -> ResponseResult<impl warp::Reply> {
     let teams = db::Team::get_teams(&pool).await?;
+
+    // TODO: check if the user has perms to get the teams
     Ok(warp::reply::json(&teams))
 }
 
