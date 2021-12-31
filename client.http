@@ -34,7 +34,7 @@ Authorization: Bearer {{ token }}
 
 ###
 
-GET http://localhost:6000/v1/scoreboards/4 HTTP/1.1
+GET http://localhost:6000/v1/scoreboards/2 HTTP/1.1
 Authorization: Bearer {{ token }}
 
 
@@ -58,7 +58,7 @@ Authorization: Bearer {{ token }}
 
 ###
 
-DELETE http://localhost:6000/v1/scoreboards/1 HTTP/1.1
+DELETE http://localhost:6000/v1/scoreboards/4 HTTP/1.1
 Authorization: Bearer {{ token }}
 
 ###
