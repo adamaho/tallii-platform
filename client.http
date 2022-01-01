@@ -1,4 +1,4 @@
-@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRhbS5haG9AaGV5LmNvbSIsImV4cCI6MTY0MzM4ODk1NX0.SBBCGPN74UTx-8E5AOBf8xFwnJ_xl7DEy6z1gihP3TI
+@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRhbS5haG9AaGV5LmNvbSIsImV4cCI6MTY0MzY2NzI5Nn0.Dv0dyieMLf7qY_XjkZCpZtzayGDKGQKy3jg_7VhfwNI
 
 # Endpoint that should be called to verify a jwt
 GET http://localhost:6000/v1/authorize HTTP/1.1
@@ -34,7 +34,7 @@ Authorization: Bearer {{ token }}
 
 ###
 
-GET http://localhost:6000/v1/scoreboards/2 HTTP/1.1
+GET http://localhost:6000/v1/scoreboards/1 HTTP/1.1
 Authorization: Bearer {{ token }}
 
 
