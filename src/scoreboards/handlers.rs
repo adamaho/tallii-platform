@@ -33,6 +33,7 @@ pub struct ScoreboardResponse {
     pub game: String,
     pub created_by: auth::db::UserResponse,
     pub created_at: chrono::NaiveDateTime,
+    pub updated_at: chrono::NaiveDateTime,
     pub teams: Option<Vec<teams::db::Team>>,
 }
 
@@ -64,6 +65,7 @@ async fn get_scoreboard_response(
             created_at: user.created_at,
         },
         created_at: scoreboard.created_at,
+        updated_at: scoreboard.updated_at,
         teams: Some(teams),
     })
 }
@@ -144,6 +146,7 @@ pub async fn get_me_scoreboards(
             name: scoreboard.name,
             game: scoreboard.game,
             created_at: scoreboard.created_at,
+            updated_at: scoreboard.updated_at,
             created_by: auth::db::UserResponse {
                 user_id: user.user_id,
                 username: user.username.clone(),
