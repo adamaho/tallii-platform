@@ -18,7 +18,7 @@ jobs:
     - name: Build Container
       env:
         REGISTRY: registry.digitalocean.com/tallii
-        REPOSITORY: tallii-auth
+        REPOSITORY: tallii-platform
         IMAGE_TAG: ${{ github.sha }}
       run: docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile.release .
 
@@ -36,22 +36,22 @@ jobs:
     - name: Push to Registry
       env:
         REGISTRY: registry.digitalocean.com/tallii
-        REPOSITORY: tallii-auth
+        REPOSITORY: tallii-platform
         IMAGE_TAG: ${{ github.sha }}
       run: docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
     
-    # Update deployment file
-    - name: Update deployment file
-      run: TAG=$(echo $GITHUB_SHA) && sed -i 's|<IMAGE>|registry.digitalocean.com/tallii/tallii-auth:'${TAG}'|' $GITHUB_WORKSPACE/kubernetes/deployment.yaml
+    # # Update deployment file
+    # - name: Update deployment file
+    #   run: TAG=$(echo $GITHUB_SHA) && sed -i 's|<IMAGE>|registry.digitalocean.com/tallii/tallii-auth:'${TAG}'|' $GITHUB_WORKSPACE/kubernetes/deployment.yaml
     
-    # Get cluster config
-    - name: Save DigitalOcean kubeconfig with short-lived credentials
-      run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-tor1-tallii
+    # # Get cluster config
+    # - name: Save DigitalOcean kubeconfig with short-lived credentials
+    #   run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-tor1-tallii
     
-    # Run the deployment
-    - name: Deploy to DigitalOcean Kubernetes
-      run: kubectl apply -f $GITHUB_WORKSPACE/kubernetes/deployment.yaml
+    # # Run the deployment
+    # - name: Deploy to DigitalOcean Kubernetes
+    #   run: kubectl apply -f $GITHUB_WORKSPACE/kubernetes/deployment.yaml
 
-    # Verify the pod is running
-    - name: Verify deployment
-      run: kubectl rollout status deployment/tallii-auth
+    # # Verify the pod is running
+    # - name: Verify deployment
+    #   run: kubectl rollout status deployment/tallii-auth
