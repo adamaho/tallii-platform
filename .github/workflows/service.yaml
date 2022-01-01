@@ -39,6 +39,7 @@ jobs:
         REPOSITORY: tallii-platform
         IMAGE_TAG: ${{ github.sha }}
       run: docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+
     
     # # Update deployment file
     # - name: Update deployment file

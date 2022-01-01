@@ -6,7 +6,7 @@ RUN USER=root cargo new migrations
 RUN apt-get update && apt-get install -y openssl libssl-dev clang llvm-dev libclang-dev
 
 # build the sqlx binary
-RUN cargo install --target x86_64-unknown-linux-musl --version=0.5.2 sqlx-cli --no-default-features --features postgres
+RUN cargo install --target x86_64-unknown-linux-musl --version=0.5.10 sqlx-cli --no-default-features --features postgres
 
 FROM alpine
 WORKDIR /root
