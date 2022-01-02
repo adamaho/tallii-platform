@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "migrations/**"
-      - "scripts/**"
-      - "kubernetes/migrations.yaml"
+    # paths:
+    #   - "migrations/**"
+    #   - "scripts/**"
+    #   - "kubernetes/migrations.yaml"
 
 jobs:
   build_push:
