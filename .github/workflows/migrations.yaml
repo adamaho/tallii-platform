@@ -7,6 +7,7 @@ on:
     paths:
       - "migrations/**"
       - "scripts/**"
+      - "kubernetes/migrations.yaml"
 
 jobs:
   build_push:
@@ -43,22 +44,22 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
       run: docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
   
-    #   # Update deployment file
-    # - name: Update deployment file
-    #   run: TAG=$(echo $GITHUB_SHA) && sed -i 's|<IMAGE>|registry.digitalocean.com/tallii-platform/migrations:'${TAG}'|' $GITHUB_WORKSPACE/kubernetes/migrations.yaml
+      # Update deployment file
+    - name: Update deployment file
+      run: TAG=$(echo $GITHUB_SHA) && sed -i 's|<IMAGE>|registry.digitalocean.com/tallii/tallii-platform-migrations:'${TAG}'|' $GITHUB_WORKSPACE/kubernetes/migrations.yaml
     
-    #   # Get cluster config
-    # - name: Save DigitalOcean kubeconfig with short-lived credentials
-    #   run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-tor1-tallii
+      # Get cluster config
+    - name: Save DigitalOcean kubeconfig with short-lived credentials
+      run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 tallii-k8s
 
-    # # Delete the existing migration job
-    # - name: Delete past job
-    #   run: kubectl delete job tallii-auth-migrations
+    # Delete the existing migration job
+    - name: Delete past job
+      run: kubectl delete job tallii-platform-migrations
     
-    # # run migration job
-    # - name: Deploy to DigitalOcean Kubernetes
-    #   run: kubectl apply -f $GITHUB_WORKSPACE/kubernetes/migrations.yaml
+    # run migration job
+    - name: Deploy to DigitalOcean Kubernetes
+      run: kubectl apply -f $GITHUB_WORKSPACE/kubernetes/migrations.yaml
 
-    # # Verify the job ran
-    # - name: Verify job complete
-    #   run: kubectl wait --for=condition=complete --timeout=30s job/tallii-auth-migrations
+    # Verify the job ran
+    - name: Verify job complete
+      run: kubectl wait --for=condition=complete --timeout=30s job/tallii-platform-migrations
