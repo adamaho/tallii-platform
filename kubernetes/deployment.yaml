@@ -23,7 +23,7 @@ spec:
       - name: tallii-platform
         image: <IMAGE>
         ports:
-        - containerPort: 5000
+        - containerPort: 6000
         env:
         - name: RUST_LOG
           value: tallii-platform
@@ -48,4 +48,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 5000
+      targetPort: 6000

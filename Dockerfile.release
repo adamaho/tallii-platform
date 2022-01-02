@@ -24,5 +24,5 @@ WORKDIR /root
 # move the tallii-platform binary into the local bin
 COPY --from=builder /usr/src/tallii-platform/target/x86_64-unknown-linux-musl/release/tallii-platform .
 
-EXPOSE 5000
+EXPOSE 6000
 ENTRYPOINT ["./tallii-platform"]
