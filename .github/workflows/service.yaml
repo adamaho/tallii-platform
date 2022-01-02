@@ -54,4 +54,4 @@ jobs:
 
     # Verify the pod is running
     - name: Verify deployment
-      run: kubectl rollout status deployment/tallii-platform
+      run: kubectl rollout status deployment/tallii-platform --timeout 30s
