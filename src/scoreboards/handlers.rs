@@ -32,8 +32,8 @@ pub struct ScoreboardResponse {
     pub name: String,
     pub game: String,
     pub created_by: auth::db::UserResponse,
-    pub created_at: chrono::NaiveDateTime,
-    pub updated_at: chrono::NaiveDateTime,
+    pub created_at: chrono::DateTime<chrono::offset::Utc>,
+    pub updated_at: chrono::DateTime<chrono::offset::Utc>,
     pub teams: Option<Vec<teams::db::Team>>,
 }
 

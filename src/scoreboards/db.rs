@@ -12,8 +12,8 @@ pub struct Scoreboard {
     pub name: String,
     pub game: String,
     pub created_by: i32,
-    pub updated_at: chrono::NaiveDateTime,
-    pub created_at: chrono::NaiveDateTime
+    pub updated_at: chrono::DateTime<chrono::offset::Utc>,
+    pub created_at: chrono::DateTime<chrono::offset::Utc>
 }
 
 impl Scoreboard {
