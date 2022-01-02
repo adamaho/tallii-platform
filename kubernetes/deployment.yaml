@@ -37,6 +37,11 @@ spec:
             secretKeyRef:
               name: tallii-jwt-secret
               key: data
+        - name: SALT
+          valueFrom:
+            secretKeyRef:
+              name: tallii-salt
+              key: data
 ---
 apiVersion: v1
 kind: Service
