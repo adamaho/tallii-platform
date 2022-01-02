@@ -10,7 +10,7 @@ pub struct User {
     pub username: String,
     pub email: String,
     pub password: String,
-    pub created_at: chrono::NaiveDateTime,
+    pub created_at: chrono::DateTime<chrono::offset::Utc>
 }
 
 /// Representation of a user without the password for a response
@@ -19,7 +19,7 @@ pub struct UserResponse {
     pub user_id: i32,
     pub username: String,
     pub email: String,
-    pub created_at: chrono::NaiveDateTime,
+    pub created_at: chrono::DateTime<chrono::offset::Utc>
 }
 
 impl User {

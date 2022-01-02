@@ -365,6 +365,9 @@ components:
         created_at:
           type: string
           format: date-time
+        updated_at:
+          type: string
+          format: date-time
         teams:
           type: array
           items:
@@ -375,6 +378,7 @@ components:
         - game
         - created_by
         - created_at
+        - updated_at
         - teams
     UpdateTeamRequestModel:
       type: object

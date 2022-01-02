@@ -12,7 +12,7 @@ pub struct Team {
     pub scoreboard_id: i32,
     pub name: String,
     pub score: i32,
-    pub created_at: chrono::NaiveDateTime,
+    pub created_at: chrono::DateTime<chrono::offset::Utc>
 }
 
 #[derive(Deserialize)]
