@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - "migrations/**"
-    #   - "scripts/**"
-    #   - "kubernetes/migrations.yaml"
+    paths:
+      - "migrations/**"
+      - "scripts/**"
+      - "kubernetes/migrations.yaml"
 
 jobs:
   build_push:
@@ -52,9 +52,9 @@ jobs:
     - name: Save DigitalOcean kubeconfig with short-lived credentials
       run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 tallii-k8s
 
-    # # Delete the existing migration job
-    # - name: Delete past job
-    #   run: kubectl delete job tallii-platform-migrations
+    # Delete the existing migration job
+    - name: Delete past job
+      run: kubectl delete job tallii-platform-migrations
     
     # run migration job
     - name: Deploy to DigitalOcean Kubernetes
