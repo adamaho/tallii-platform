@@ -2,8 +2,8 @@
 
 echo $DATABASE_URL
 
-echo "Creating database if it doesn't exist and running migrations"
+echo "running migrations"
 
-sqlx database setup
+sqlx migrate run
 
 echo "Everything OK."
