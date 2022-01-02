@@ -4,7 +4,7 @@ metadata:
   name: tallii-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/whitelist-source-range: "142.114.52.103,198.251.52.214"
+    # nginx.ingress.kubernetes.io/whitelist-source-range: "142.114.52.103,198.251.52.214"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/enable-cors: "true"
@@ -13,10 +13,10 @@ spec:
   - host: "api.tallii.io"
     http:
       paths:
-      - path: /auth(/|$)(.*)
+      - path: /api(/|$)(.*)
         pathType: Prefix
         backend:
           service:
-            name: tallii-auth-svc
+            name: tallii-platform-svc
             port:
               number: 80
