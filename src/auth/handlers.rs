@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use jsonwebtoken::TokenData;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use validator::Validate;
@@ -10,6 +11,15 @@ use super::token::Claims;
 use crate::config::Config;
 use crate::errors::TalliiError;
 use crate::ResponseResult;
+
+//////////////////////////////////////////////////
+/// get user profile
+//////////////////////////////////////////////////
+pub async fn get_me(pool: Arc<PgPool>, token: TokenData<Claims>) -> ResponseResult<impl warp::Reply> {
+    let user = User::get_by_user_id(&pool, &token.claims.sub).await?;
+
+    Ok(warp::reply::json(&user))
+}
 
 //////////////////////////////////////////////////
 /// Log user in
