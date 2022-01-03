@@ -18,7 +18,7 @@ impl AuthRoutes {
         config: Config,
     ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
         let auth_routes =
-            authorize().or(login(pool.clone()).or(signup(pool.clone(), config.clone())));
+            authorize().or(login(pool.clone()).or(signup(pool.clone(), config.clone())).or(get_me(pool.clone())));
 
         auth_routes
     }
@@ -30,6 +30,15 @@ pub fn authorize() -> impl Filter<Extract = impl warp::Reply, Error = warp::Reje
         .and(warp::get())
         .and(with_auth())
         .map(move |_: TokenData<Claims>| warp::reply())
+}
+
+/// GET /v1/me - gets the currently logged in users profile
+pub fn get_me(pool: Arc<PgPool>) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+    warp::path!("v1" / "me")
+        .and(warp::get())
+        .and(with_pool(pool.clone()))
+        .and(with_auth())
+        .and_then(handlers::get_me)
 }
 
 /// Logs a user into the applicaton
