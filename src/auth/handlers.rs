@@ -18,7 +18,14 @@ use crate::ResponseResult;
 pub async fn get_me(pool: Arc<PgPool>, token: TokenData<Claims>) -> ResponseResult<impl warp::Reply> {
     let user = User::get_by_user_id(&pool, &token.claims.sub).await?;
 
-    Ok(warp::reply::json(&user))
+    let response = UserResponse {
+        user_id: user.user_id,
+        email: user.email,
+        username: user.username,
+        created_at: user.created_at
+    };
+
+    Ok(warp::reply::json(&response))
 }
 
 //////////////////////////////////////////////////
