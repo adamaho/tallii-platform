@@ -62,6 +62,8 @@ async fn get_scoreboard_response(
             user_id: user.user_id,
             username: user.username,
             email: user.email,
+            avatar_background: user.avatar_background,
+            avatar_emoji: user.avatar_emoji,
             created_at: user.created_at,
         },
         created_at: scoreboard.created_at,
@@ -151,6 +153,8 @@ pub async fn get_me_scoreboards(
                 user_id: user.user_id,
                 username: user.username.clone(),
                 email: user.email.clone(),
+                avatar_background: user.avatar_background.clone(),
+                avatar_emoji: user.avatar_emoji.clone(),
                 created_at: user.created_at,
             },
             // the remove is used to get teh value itself instead of the borrowed reference

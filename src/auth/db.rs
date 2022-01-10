@@ -10,6 +10,8 @@ pub struct User {
     pub username: String,
     pub email: String,
     pub password: String,
+    pub avatar_background: String,
+    pub avatar_emoji: String,
     pub created_at: chrono::DateTime<chrono::offset::Utc>
 }
 
@@ -19,6 +21,8 @@ pub struct UserResponse {
     pub user_id: i32,
     pub username: String,
     pub email: String,
+    pub avatar_background: String,
+    pub avatar_emoji: String,
     pub created_at: chrono::DateTime<chrono::offset::Utc>
 }
 
@@ -97,6 +101,39 @@ impl User {
         .bind(username)
         .bind(email)
         .bind(hash)
+        .fetch_one(conn)
+        .await
+        .map_err(|e| TalliiError::DatabaseError(e.to_string()))?;
+
+        Ok(user)
+    }
+
+    /// updates a user
+    pub async fn update_user(
+        conn: &PgPool,
+        user_id: &i32,
+        username: &str,
+        avatar_background: &str,
+        avatar_emoji: &str,
+    ) -> Result<User> {
+        let user = sqlx::query_as::<_, User>(
+            r#"
+            update
+                users
+            set
+                username = $1,
+                avatar_background = $2,
+                avatar_emoji = $3
+            where
+                user_id = $4
+            returning
+                *
+        "#,
+        )
+        .bind(username)
+        .bind(avatar_background)
+        .bind(avatar_emoji)
+        .bind(user_id)
         .fetch_one(conn)
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))?;
