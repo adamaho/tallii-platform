@@ -54,7 +54,6 @@ pub fn get_me_scoreboards(
         .and_then(handlers::get_me_scoreboards)
 }
 
-
 /// deletes the provided user
 pub fn delete_scoreboard(
     pool: Arc<PgPool>,

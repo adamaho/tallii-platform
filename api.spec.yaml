@@ -78,6 +78,27 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         default:
           $ref: '#/components/responses/InternalServerError'
+    put:
+      operationId: updateMe
+      summary: updates the currently logged in users profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: the user info to update with
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequestModel'
+      responses:
+        200:
+          description: the user info of the currently logged in user
+          $ref: '#/components/responses/GetMeResponse'
+        401:
+          description: the provided token is invalid
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
   /v1/scoreboards:
     post:
       operationId: createScoreboard
@@ -343,6 +364,10 @@ components:
           type: string
         email:
           type: string
+        avatar_background:
+          type: string
+        avatar_emoji:
+          type: string
         created_at:
           type: string
           format: date-time
@@ -350,7 +375,22 @@ components:
         - user_id
         - username
         - email
+        - avatar_background
+        - avatar_emoji
         - created_at
+    UpdateUserRequestModel:
+      type: object
+      properties:
+        username:
+          type: string
+        avatar_background:
+          type: string
+        avatar_emoji:
+          type: string
+      required:
+        - username
+        - avatar_background
+        - avatar_emoji
     TeamModel:
       type: object
       properties:

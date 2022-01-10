@@ -1,7 +1,7 @@
 use futures::future;
-use warp::hyper::StatusCode;
 use std::collections::HashMap;
 use std::sync::Arc;
+use warp::hyper::StatusCode;
 
 use jsonwebtoken::TokenData;
 use serde::{Deserialize, Serialize};
@@ -62,6 +62,8 @@ async fn get_scoreboard_response(
             user_id: user.user_id,
             username: user.username,
             email: user.email,
+            avatar_background: user.avatar_background,
+            avatar_emoji: user.avatar_emoji,
             created_at: user.created_at,
         },
         created_at: scoreboard.created_at,
@@ -98,7 +100,10 @@ pub async fn create_scoreboard(
     let response = get_scoreboard_response(pool, &scoreboard.scoreboard_id).await?;
 
     // this response should be the same as the get scoreboard response
-    Ok(warp::reply::with_status(warp::reply::json(&response), StatusCode::CREATED))
+    Ok(warp::reply::with_status(
+        warp::reply::json(&response),
+        StatusCode::CREATED,
+    ))
 }
 
 /// gets a single scoreboard
@@ -151,6 +156,8 @@ pub async fn get_me_scoreboards(
                 user_id: user.user_id,
                 username: user.username.clone(),
                 email: user.email.clone(),
+                avatar_background: user.avatar_background.clone(),
+                avatar_emoji: user.avatar_emoji.clone(),
                 created_at: user.created_at,
             },
             // the remove is used to get teh value itself instead of the borrowed reference
@@ -180,5 +187,8 @@ pub async fn delete_scoreboard(
     db::Scoreboard::delete_scoreboard(&pool, &scoreboard_id).await?;
 
     // response with the scoreboard deleted
-    Ok(warp::reply::with_status("scoreboard deleted", StatusCode::OK))
+    Ok(warp::reply::with_status(
+        "scoreboard deleted",
+        StatusCode::OK,
+    ))
 }

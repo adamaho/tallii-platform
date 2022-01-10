@@ -13,7 +13,7 @@ pub struct Scoreboard {
     pub game: String,
     pub created_by: i32,
     pub updated_at: chrono::DateTime<chrono::offset::Utc>,
-    pub created_at: chrono::DateTime<chrono::offset::Utc>
+    pub created_at: chrono::DateTime<chrono::offset::Utc>,
 }
 
 impl Scoreboard {
@@ -82,17 +82,14 @@ impl Scoreboard {
     }
 
     /// deletes a scoreboard
-    pub async fn delete_scoreboard(
-        pool: &PgPool,
-        scoreboard_id: &i32
-    ) -> Result<()> {
+    pub async fn delete_scoreboard(pool: &PgPool, scoreboard_id: &i32) -> Result<()> {
         sqlx::query(
             r#"
             delete from
                 scoreboards
             where
                 scoreboard_id = $1
-            "#
+            "#,
         )
         .bind(scoreboard_id)
         .execute(pool)

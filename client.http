@@ -1,4 +1,4 @@
-@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRhbS5haG9AaGV5LmNvbSIsImV4cCI6MTY0MzY2NzI5Nn0.Dv0dyieMLf7qY_XjkZCpZtzayGDKGQKy3jg_7VhfwNI
+@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImVtYWlsIjoiYWRhbS5haG9AaGV5LmNvbSIsImV4cCI6MTY0NDQzNzEyMX0.k9kMVl29jaqNuW-SI2K4jbbK6NFBnjX5DAqab4nlf7s
 
 # Endpoint that should be called to verify a jwt
 GET http://localhost:6000/v1/authorize HTTP/1.1
@@ -12,7 +12,7 @@ GET http://localhost:6000/v1/me HTTP/1.1
 Authorization: Bearer {{ token }}
 content-type: application/json
 
-##
+###
 
 POST http://localhost:6000/v1/login HTTP/1.1
 content-type: application/json
@@ -24,13 +24,25 @@ content-type: application/json
 
 ###
 
-POST http://localhost:6000/v1/signup HTTP/1.1
+POST https://api.tallii.io/api/v1/signup HTTP/1.1
 content-type: application/json
 
 {
-  "username": "adam",
-  "email": "adam.aho@hey.com",
-  "password": "brazil"
+  "username": "appreview",
+  "email": "appreview@tallii.io",
+  "password": "apple1"
+}
+
+###
+
+PUT http://localhost:6000/v1/me HTTP/1.1
+Authorization: Bearer {{ token }}
+content-type: application/json
+
+{
+  "username": "asdasd",
+  "avatar_background": "brazil",
+  "avatar_emoji": "brazil"
 }
 
 ###

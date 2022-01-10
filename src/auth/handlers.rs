@@ -15,14 +15,19 @@ use crate::ResponseResult;
 //////////////////////////////////////////////////
 /// get user profile
 //////////////////////////////////////////////////
-pub async fn get_me(pool: Arc<PgPool>, token: TokenData<Claims>) -> ResponseResult<impl warp::Reply> {
+pub async fn get_me(
+    pool: Arc<PgPool>,
+    token: TokenData<Claims>,
+) -> ResponseResult<impl warp::Reply> {
     let user = User::get_by_user_id(&pool, &token.claims.sub).await?;
 
     let response = UserResponse {
         user_id: user.user_id,
         email: user.email,
         username: user.username,
-        created_at: user.created_at
+        avatar_background: user.avatar_background,
+        avatar_emoji: user.avatar_emoji,
+        created_at: user.created_at,
     };
 
     Ok(warp::reply::json(&response))
@@ -76,6 +81,8 @@ pub async fn login(payload: LoginPayload, pool: Arc<PgPool>) -> ResponseResult<i
                     user_id: user.user_id,
                     username: user.username,
                     email: user.email,
+                    avatar_background: user.avatar_background,
+                    avatar_emoji: user.avatar_emoji,
                     created_at: user.created_at,
                 },
             };
@@ -141,8 +148,46 @@ pub async fn signup(
             user_id: created_user.user_id,
             username: created_user.username,
             email: created_user.email,
+            avatar_background: created_user.avatar_background,
+            avatar_emoji: created_user.avatar_emoji,
             created_at: created_user.created_at,
         },
+    };
+
+    Ok(warp::reply::json(&response))
+}
+
+//////////////////////////////////////////////////
+/// update user profile
+//////////////////////////////////////////////////
+#[derive(Deserialize)]
+pub struct UpdateMeRequestPayload {
+    pub username: String,
+    pub avatar_background: String,
+    pub avatar_emoji: String,
+}
+
+pub async fn update_me(
+    payload: UpdateMeRequestPayload,
+    pool: Arc<PgPool>,
+    token: TokenData<Claims>,
+) -> ResponseResult<impl warp::Reply> {
+    let user = User::update_user(
+        &pool,
+        &token.claims.sub,
+        &payload.username,
+        &payload.avatar_background,
+        &payload.avatar_emoji,
+    )
+    .await?;
+
+    let response = UserResponse {
+        user_id: user.user_id,
+        email: user.email,
+        username: user.username,
+        avatar_background: user.avatar_background,
+        avatar_emoji: user.avatar_emoji,
+        created_at: user.created_at,
     };
 
     Ok(warp::reply::json(&response))
