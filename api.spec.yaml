@@ -337,21 +337,7 @@ components:
           type: string
         user:
           type: object
-          properties:
-            user_id:
-              type: integer
-            username:
-              type: string
-            email:
-              type: string
-            created_at:
-              type: string
-              format: date-time
-          required:
-            - user_id
-            - username
-            - email
-            - created_at
+          $ref: '#/components/schemas/UserModel'
       required:
         - access_token
         - user
