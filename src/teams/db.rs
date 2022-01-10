@@ -12,7 +12,7 @@ pub struct Team {
     pub scoreboard_id: i32,
     pub name: String,
     pub score: i32,
-    pub created_at: chrono::DateTime<chrono::offset::Utc>
+    pub created_at: chrono::DateTime<chrono::offset::Utc>,
 }
 
 #[derive(Deserialize)]
@@ -139,7 +139,7 @@ impl Team {
     pub async fn update_team(
         pool: &PgPool,
         team_id: &i32,
-        payload: &UpdateTeamRequest
+        payload: &UpdateTeamRequest,
     ) -> Result<Team> {
         sqlx::query_as::<_, Team>(
             r#"
@@ -152,7 +152,7 @@ impl Team {
                     team_id = $3 
                 returning
                     *
-            "#
+            "#,
         )
         .bind(&payload.name)
         .bind(&payload.score)

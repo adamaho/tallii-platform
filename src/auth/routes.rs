@@ -17,8 +17,10 @@ impl AuthRoutes {
         pool: Arc<PgPool>,
         config: Config,
     ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-        let auth_routes =
-            authorize().or(login(pool.clone()).or(signup(pool.clone(), config.clone())).or(get_me(pool.clone())).or(update_me(pool.clone())));
+        let auth_routes = authorize().or(login(pool.clone())
+            .or(signup(pool.clone(), config.clone()))
+            .or(get_me(pool.clone()))
+            .or(update_me(pool.clone())));
 
         auth_routes
     }
@@ -33,7 +35,9 @@ pub fn authorize() -> impl Filter<Extract = impl warp::Reply, Error = warp::Reje
 }
 
 /// GET /v1/me - gets the currently logged in users profile
-pub fn get_me(pool: Arc<PgPool>) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+pub fn get_me(
+    pool: Arc<PgPool>,
+) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "me")
         .and(warp::get())
         .and(with_pool(pool.clone()))
@@ -42,7 +46,9 @@ pub fn get_me(pool: Arc<PgPool>) -> impl Filter<Extract = impl warp::Reply, Erro
 }
 
 /// PUT /v1/me - updates the currently logged in users profile
-pub fn update_me(pool: Arc<PgPool>) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+pub fn update_me(
+    pool: Arc<PgPool>,
+) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("v1" / "me")
         .and(warp::put())
         .and(warp::body::json())

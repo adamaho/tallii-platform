@@ -15,7 +15,10 @@ use crate::ResponseResult;
 //////////////////////////////////////////////////
 /// get user profile
 //////////////////////////////////////////////////
-pub async fn get_me(pool: Arc<PgPool>, token: TokenData<Claims>) -> ResponseResult<impl warp::Reply> {
+pub async fn get_me(
+    pool: Arc<PgPool>,
+    token: TokenData<Claims>,
+) -> ResponseResult<impl warp::Reply> {
     let user = User::get_by_user_id(&pool, &token.claims.sub).await?;
 
     let response = UserResponse {
@@ -24,7 +27,7 @@ pub async fn get_me(pool: Arc<PgPool>, token: TokenData<Claims>) -> ResponseResu
         username: user.username,
         avatar_background: user.avatar_background,
         avatar_emoji: user.avatar_emoji,
-        created_at: user.created_at
+        created_at: user.created_at,
     };
 
     Ok(warp::reply::json(&response))
@@ -154,7 +157,6 @@ pub async fn signup(
     Ok(warp::reply::json(&response))
 }
 
-
 //////////////////////////////////////////////////
 /// update user profile
 //////////////////////////////////////////////////
@@ -162,11 +164,22 @@ pub async fn signup(
 pub struct UpdateMeRequestPayload {
     pub username: String,
     pub avatar_background: String,
-    pub avatar_emoji: String
+    pub avatar_emoji: String,
 }
 
-pub async fn update_me(payload: UpdateMeRequestPayload, pool: Arc<PgPool>, token: TokenData<Claims>) -> ResponseResult<impl warp::Reply> {
-    let user = User::update_user(&pool, &token.claims.sub, &payload.username, &payload.avatar_background, &payload.avatar_emoji).await?;
+pub async fn update_me(
+    payload: UpdateMeRequestPayload,
+    pool: Arc<PgPool>,
+    token: TokenData<Claims>,
+) -> ResponseResult<impl warp::Reply> {
+    let user = User::update_user(
+        &pool,
+        &token.claims.sub,
+        &payload.username,
+        &payload.avatar_background,
+        &payload.avatar_emoji,
+    )
+    .await?;
 
     let response = UserResponse {
         user_id: user.user_id,
@@ -174,7 +187,7 @@ pub async fn update_me(payload: UpdateMeRequestPayload, pool: Arc<PgPool>, token
         username: user.username,
         avatar_background: user.avatar_background,
         avatar_emoji: user.avatar_emoji,
-        created_at: user.created_at
+        created_at: user.created_at,
     };
 
     Ok(warp::reply::json(&response))

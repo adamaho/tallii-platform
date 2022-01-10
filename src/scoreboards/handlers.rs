@@ -1,7 +1,7 @@
 use futures::future;
-use warp::hyper::StatusCode;
 use std::collections::HashMap;
 use std::sync::Arc;
+use warp::hyper::StatusCode;
 
 use jsonwebtoken::TokenData;
 use serde::{Deserialize, Serialize};
@@ -100,7 +100,10 @@ pub async fn create_scoreboard(
     let response = get_scoreboard_response(pool, &scoreboard.scoreboard_id).await?;
 
     // this response should be the same as the get scoreboard response
-    Ok(warp::reply::with_status(warp::reply::json(&response), StatusCode::CREATED))
+    Ok(warp::reply::with_status(
+        warp::reply::json(&response),
+        StatusCode::CREATED,
+    ))
 }
 
 /// gets a single scoreboard
@@ -184,5 +187,8 @@ pub async fn delete_scoreboard(
     db::Scoreboard::delete_scoreboard(&pool, &scoreboard_id).await?;
 
     // response with the scoreboard deleted
-    Ok(warp::reply::with_status("scoreboard deleted", StatusCode::OK))
+    Ok(warp::reply::with_status(
+        "scoreboard deleted",
+        StatusCode::OK,
+    ))
 }

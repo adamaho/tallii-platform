@@ -12,7 +12,7 @@ pub struct User {
     pub password: String,
     pub avatar_background: String,
     pub avatar_emoji: String,
-    pub created_at: chrono::DateTime<chrono::offset::Utc>
+    pub created_at: chrono::DateTime<chrono::offset::Utc>,
 }
 
 /// Representation of a user without the password for a response
@@ -23,7 +23,7 @@ pub struct UserResponse {
     pub email: String,
     pub avatar_background: String,
     pub avatar_emoji: String,
-    pub created_at: chrono::DateTime<chrono::offset::Utc>
+    pub created_at: chrono::DateTime<chrono::offset::Utc>,
 }
 
 impl User {
