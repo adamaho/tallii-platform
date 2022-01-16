@@ -23,6 +23,9 @@ pub enum TalliiError {
     #[error("couldn't reach mars. check back later.")]
     InternalServerError(String),
 
+    #[error("bad request")]
+    BadRequest(String),
+
     #[error("invalid credentials")]
     Unauthorized,
 
@@ -70,6 +73,11 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                 status_code = StatusCode::INTERNAL_SERVER_ERROR;
                 message = format!("{:?}", error);
                 code = String::from("INTERNAL_SERVER_ERROR");
+            }
+            TalliiError::BadRequest(error) => {
+                status_code = StatusCode::BAD_REQUEST;
+                message = format!("{:?}", error);
+                code = String::from("BAD_REQUEST");
             }
             TalliiError::ValidationError(error) => {
                 status_code = StatusCode::BAD_REQUEST;

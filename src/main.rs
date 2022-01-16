@@ -6,6 +6,7 @@ pub mod config;
 pub mod errors;
 pub mod routes;
 pub mod scoreboards;
+pub mod search;
 pub mod teams;
 pub mod wrappers;
 
