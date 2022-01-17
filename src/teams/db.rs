@@ -74,6 +74,8 @@ impl Team {
                   t.scoreboard_id = s.scoreboard_id
               where
                   s.created_by = $1
+              order by
+                s.scoreboard_id
               "#,
         )
         .bind(user_id)

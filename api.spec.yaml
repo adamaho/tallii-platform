@@ -295,7 +295,7 @@ components:
             type: array
             items:
               type: object
-              $ref: '#/components/schemas/SearchModel'
+              $ref: '#/components/schemas/UserModel'
     GetScoreboardsResponse:
       description: scoreboards
       content:
@@ -371,11 +371,6 @@ components:
       required:
         - access_token
         - user
-    SearchModel:
-      type: object
-      properties:
-        users:
-          $ref: '#/components/schemas/UserModel'
     UserModel:
       type: object
       properties:

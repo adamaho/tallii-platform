@@ -2,7 +2,4 @@
 
 tallii platform service that is the shit.
 
-## todo
-
-- when fetching scoreboard or team, if doesnt exist return 404
-- deploy
+DATABASE_URL=postgres://postgres:password@0.0.0.0:5001/tallii-platform-db
