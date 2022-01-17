@@ -1,20 +1,20 @@
-@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImVtYWlsIjoiYWRhbS5haG9AaGV5LmNvbSIsImV4cCI6MTY0NDk4MjQ0Nn0.ttlWDxu85yt6YmFe0oxKAGj4JdkJ50joQXjNzDUBJjs
+@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImVtYWlsIjoiYWRhbS5haG9AaGV5LmNvbSIsImV4cCI6MTY0NTA0MjY3OX0.2SZMhj2IR10ouToiCIpOkDywcZsnZGCsCbPTmNvv4p8
 
 # Endpoint that should be called to verify a jwt
-GET http://localhost:6000/v1/authorize HTTP/1.1
+GET https://api.tallii.io/api/v1/authorize HTTP/1.1
 Authorization: Bearer {{ token }}
 content-type: application/json
 
 
 ###
 
-GET http://localhost:6000/v1/me HTTP/1.1
+GET https://api.tallii.io/api/v1/me HTTP/1.1
 Authorization: Bearer {{ token }}
 content-type: application/json
 
 ###
 
-POST http://localhost:6000/v1/login HTTP/1.1
+POST https://api.tallii.io/api/v1/login HTTP/1.1
 content-type: application/json
 
 {
@@ -24,7 +24,7 @@ content-type: application/json
 
 ###
 
-POST http://localhost:6000/v1/signup HTTP/1.1
+POST https://api.tallii.io/api/v1/signup HTTP/1.1
 content-type: application/json
 
 {
@@ -35,7 +35,7 @@ content-type: application/json
 
 ###
 
-PUT http://localhost:6000/v1/me HTTP/1.1
+PUT https://api.tallii.io/api/v1/me HTTP/1.1
 Authorization: Bearer {{ token }}
 content-type: application/json
 
@@ -48,12 +48,12 @@ content-type: application/json
 
 ###
 
-GET http://localhost:6000/v1/search?query=re HTTP/1.1
+GET https://api.tallii.io/api/v1/search?query=andrea HTTP/1.1
 Authorization: Bearer {{ token }}
 
 ###
 
-GET http://localhost:6000/v1/me/scoreboards HTTP/1.1
+GET https://api.tallii.io/api/v1/me/scoreboards HTTP/1.1
 Authorization: Bearer {{ token }}
 
 ###
@@ -64,7 +64,7 @@ Authorization: Bearer {{ token }}
 
 ###
 
-POST http://localhost:6000/v1/scoreboards HTTP/1.1
+POST https://api.tallii.io/api/v1/scoreboards HTTP/1.1
 Authorization: Bearer {{ token }}
 
 {
@@ -82,12 +82,12 @@ Authorization: Bearer {{ token }}
 
 ###
 
-DELETE http://localhost:6000/v1/scoreboards/4 HTTP/1.1
+DELETE https://api.tallii.io/api/v1/scoreboards/4 HTTP/1.1
 Authorization: Bearer {{ token }}
 
 ###
 
-PUT http://localhost:6000/v1/teams/7 HTTP/1.1
+PUT https://api.tallii.io/api/v1/teams/7 HTTP/1.1
 Authorization: Bearer {{ token }}
 
 {

@@ -1,0 +1,96 @@
+@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYXBwcmV2aWV3QHRhbGxpaS5pbyIsImV4cCI6MTY0NTA0NDE1N30.AQaNN7FNcTTIz0WJ_wmpb8MauleMu7C8oHVjsn72_S0
+
+# Endpoint that should be called to verify a jwt
+GET http://localhost:6000/v1/authorize HTTP/1.1
+Authorization: Bearer {{ token }}
+content-type: application/json
+
+
+###
+
+GET http://localhost:6000/v1/me HTTP/1.1
+Authorization: Bearer {{ token }}
+content-type: application/json
+
+###
+
+POST http://localhost:6000/v1/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "appreview@tallii.io",
+  "password": "apple1"
+}
+
+###
+
+POST http://localhost:6000/v1/signup HTTP/1.1
+content-type: application/json
+
+{
+  "username": "Adam",
+  "email": "aaho@gmail.com",
+  "password": "apple1"
+}
+
+###
+
+PUT http://localhost:6000/v1/me HTTP/1.1
+Authorization: Bearer {{ token }}
+content-type: application/json
+
+{
+  "username": "asdasd",
+  "avatar_background": "brazil",
+  "avatar_emoji": "brazil"
+}
+
+
+###
+
+GET http://localhost:6000/v1/search?query=ad HTTP/1.1
+Authorization: Bearer {{ token }}
+
+###
+
+GET http://localhost:6000/v1/me/scoreboards HTTP/1.1
+Authorization: Bearer {{ token }}
+
+###
+
+GET http://localhost:6000/v1/scoreboards/24 HTTP/1.1
+Authorization: Bearer {{ token }}
+
+
+###
+
+POST http://localhost:6000/v1/scoreboards HTTP/1.1
+Authorization: Bearer {{ token }}
+
+{
+  "name": "I love bryanne very much adasdasdasdasdasd",
+  "game": "backgammon",
+  "teams": [
+    {
+      "name": "hill beavers"
+    },
+    {
+      "name": "arctic lions"
+    }
+  ]
+}
+
+###
+
+DELETE http://localhost:6000/v1/scoreboards/4 HTTP/1.1
+Authorization: Bearer {{ token }}
+
+###
+
+PUT http://localhost:6000/v1/teams/7 HTTP/1.1
+Authorization: Bearer {{ token }}
+
+{
+  "name": "this is a name",
+  "score": 20
+}
