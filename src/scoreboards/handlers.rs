@@ -160,7 +160,7 @@ pub async fn get_me_scoreboards(
                 avatar_emoji: user.avatar_emoji.clone(),
                 created_at: user.created_at,
             },
-            // the remove is used to get teh value itself instead of the borrowed reference
+            // the remove is used to get the value itself instead of the borrowed reference
             teams: grouped_teams.remove(&scoreboard.scoreboard_id),
         });
     }
