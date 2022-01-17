@@ -9,6 +9,7 @@ use crate::errors::handle_rejection;
 
 use crate::auth::routes::AuthRoutes;
 use crate::scoreboards::routes::ScoreboardRoutes;
+use crate::search::routes::SearchRoutes;
 use crate::teams::routes::TeamRoutes;
 
 /// Combines all of the routes together
@@ -19,6 +20,7 @@ pub fn init(
     AuthRoutes::init(pool.clone(), config.clone())
         .or(ScoreboardRoutes::init(pool.clone()))
         .or(TeamRoutes::init(pool.clone()))
+        .or(SearchRoutes::init(pool.clone()))
         .with(warp::log("tallii-platform"))
         .recover(handle_rejection)
 }

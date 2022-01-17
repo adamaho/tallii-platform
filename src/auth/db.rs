@@ -140,4 +140,33 @@ impl User {
 
         Ok(user)
     }
+
+    /// searches for users matching the string
+    pub async fn search_users(
+        conn: &PgPool,
+        query: &String
+    ) -> Result<Vec<UserResponse>> {
+        let like_term = format!("%{}%", query);
+
+        let users = sqlx::query_as::<_, UserResponse>(
+            r#"
+            select
+                *
+            from
+                users
+            where
+                username
+            like
+                $1
+            order by
+                username
+        "#,
+        )
+        .bind(&like_term)
+        .fetch_all(conn)
+        .await
+        .map_err(|e| TalliiError::DatabaseError(e.to_string()))?;
+
+        Ok(users)
+    }
 }
