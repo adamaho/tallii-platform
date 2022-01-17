@@ -156,7 +156,7 @@ impl User {
                 users
             where
                 username
-            like
+            ilike
                 $1
             order by
                 username
