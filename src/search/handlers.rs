@@ -2,12 +2,18 @@ use std::sync::Arc;
 use std::collections::HashMap;
 
 use jsonwebtoken::TokenData;
+use serde::Serialize;
 use sqlx::PgPool;
 
-use crate::auth::db::User;
+use crate::auth::db::{User, UserResponse};
 use crate::auth::token::Claims;
 use crate::errors::TalliiError;
 use crate::ResponseResult;
+
+#[derive(Serialize)]
+pub struct SearchResults {
+    pub users: Vec<UserResponse>
+}
 
 /// searches for users right now. more to come in the future
 pub async fn search(
@@ -17,9 +23,13 @@ pub async fn search(
 ) -> ResponseResult<impl warp::Reply> {
     match params.get(&String::from("query")) {
         Some(query) => {
-            let results = User::search_users(&pool, query).await?;
+            let users = User::search_users(&pool, query).await?;
 
-            return Ok(warp::reply::json(&results));
+            let response = SearchResults {
+                users
+            };
+
+            return Ok(warp::reply::json(&response));
         }
         None => {
             return Err(warp::reject::custom(TalliiError::BadRequest(String::from("Invalid query parameters"))));
