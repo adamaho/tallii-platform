@@ -292,15 +292,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              users:
-                type: array
-                items:
-                  type: object
-                  $ref: '#/components/schemas/UserModel'
-            required:
-              - users
+            $ref: '#/components/schemas/SearchResultModel'
     GetScoreboardsResponse:
       description: scoreboards
       content:
@@ -365,6 +357,15 @@ components:
         - email
         - username
         - password
+    SearchResultModel:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserModel'
+      required:
+        - users
     LoginSignupResponseModel:
       type: object
       properties:
