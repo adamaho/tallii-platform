@@ -7,10 +7,10 @@ use warp::Filter;
 use crate::config::Config;
 use crate::errors::handle_rejection;
 
-use crate::auth::routes::AuthRoutes;
 use crate::scoreboards::routes::ScoreboardRoutes;
 use crate::search::routes::SearchRoutes;
 use crate::teams::routes::TeamRoutes;
+use crate::users::routes::AuthRoutes;
 
 /// Combines all of the routes together
 pub fn init(

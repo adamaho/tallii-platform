@@ -1,8 +1,8 @@
-use std::sync::Arc;
 use std::collections::HashMap;
+use std::sync::Arc;
 
-use warp::Filter;
 use sqlx::PgPool;
+use warp::Filter;
 
 use crate::wrappers::{with_auth, with_pool};
 

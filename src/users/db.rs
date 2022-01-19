@@ -81,6 +81,24 @@ impl User {
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
 
+    /// Gets a user by their email
+    pub async fn get_by_user_id_option(conn: &PgPool, user_id: &i32) -> Result<Option<User>> {
+        sqlx::query_as::<_, User>(
+            r#"
+            select
+                *
+            from
+                users
+            where
+                users.user_id = $1
+        "#,
+        )
+        .bind(user_id)
+        .fetch_optional(conn)
+        .await
+        .map_err(|e| TalliiError::DatabaseError(e.to_string()))
+    }
+
     /// Creates an email
     pub async fn create_user(
         conn: &PgPool,
@@ -142,10 +160,7 @@ impl User {
     }
 
     /// searches for users matching the string
-    pub async fn search_users(
-        conn: &PgPool,
-        query: &String
-    ) -> Result<Vec<UserResponse>> {
+    pub async fn search_users(conn: &PgPool, query: &String) -> Result<Vec<UserResponse>> {
         let like_term = format!("%{}%", query);
 
         let users = sqlx::query_as::<_, UserResponse>(

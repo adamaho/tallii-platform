@@ -45,6 +45,11 @@ content-type: application/json
   "avatar_emoji": "brazil"
 }
 
+###
+
+GET http://localhost:6000/v1/users/3 HTTP/1.1
+Authorization: Bearer {{ token }}
+content-type: application/json
 
 ###
 
@@ -55,6 +60,12 @@ Authorization: Bearer {{ token }}
 
 GET http://localhost:6000/v1/me/scoreboards HTTP/1.1
 Authorization: Bearer {{ token }}
+
+###
+
+GET http://localhost:6000/v1/users/1/scoreboards HTTP/1.1
+Authorization: Bearer {{ token }}
+content-type: application/json
 
 ###
 
