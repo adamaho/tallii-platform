@@ -1,13 +1,13 @@
 use sqlx::postgres::PgPoolOptions;
 use std::sync::Arc;
 
-pub mod auth;
 pub mod config;
 pub mod errors;
 pub mod routes;
 pub mod scoreboards;
 pub mod search;
 pub mod teams;
+pub mod users;
 pub mod wrappers;
 
 use crate::config::Config;

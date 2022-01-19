@@ -20,7 +20,8 @@ impl AuthRoutes {
         let auth_routes = authorize().or(login(pool.clone())
             .or(signup(pool.clone(), config.clone()))
             .or(get_me(pool.clone()))
-            .or(update_me(pool.clone())));
+            .or(update_me(pool.clone()))
+            .or(get_user(pool.clone())));
 
         auth_routes
     }
@@ -43,6 +44,17 @@ pub fn get_me(
         .and(with_pool(pool.clone()))
         .and(with_auth())
         .and_then(handlers::get_me)
+}
+
+/// GET /v1/users/userId - gets the profile of a specific user
+pub fn get_user(
+    pool: Arc<PgPool>,
+) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+    warp::path!("v1" / "users" / i32)
+        .and(warp::get())
+        .and(with_pool(pool.clone()))
+        .and(with_auth())
+        .and_then(handlers::get_user)
 }
 
 /// PUT /v1/me - updates the currently logged in users profile

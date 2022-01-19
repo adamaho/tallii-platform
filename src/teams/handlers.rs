@@ -4,8 +4,8 @@ use jsonwebtoken::TokenData;
 use serde::Deserialize;
 use sqlx::PgPool;
 
-use crate::auth::token::Claims;
 use crate::errors::TalliiError;
+use crate::users::token::Claims;
 use crate::ResponseResult;
 
 use super::db;

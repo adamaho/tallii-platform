@@ -9,15 +9,15 @@ use sqlx::PgPool;
 
 use itertools::Itertools;
 
-use crate::auth::token::Claims;
 use crate::teams::db::CreateTeamPayload;
+use crate::users::token::Claims;
 use crate::{ResponseResult, Result};
 
 use super::db;
 
-use crate::auth;
 use crate::errors::TalliiError;
 use crate::teams;
+use crate::users;
 
 #[derive(Deserialize)]
 pub struct CreateScoreboardPayload {
@@ -31,7 +31,7 @@ pub struct ScoreboardResponse {
     pub scoreboard_id: i32,
     pub name: String,
     pub game: String,
-    pub created_by: auth::db::UserResponse,
+    pub created_by: users::db::UserResponse,
     pub created_at: chrono::DateTime<chrono::offset::Utc>,
     pub updated_at: chrono::DateTime<chrono::offset::Utc>,
     pub teams: Option<Vec<teams::db::Team>>,
@@ -51,14 +51,14 @@ async fn get_scoreboard_response(
     let (scoreboard, teams) = future::try_join(scoreboard_future, teams_future).await?;
 
     // get user that created the scoreboard
-    let user = auth::db::User::get_by_user_id(&pool, &scoreboard.created_by).await?;
+    let user = users::db::User::get_by_user_id(&pool, &scoreboard.created_by).await?;
 
     // create the response
     Ok(ScoreboardResponse {
         scoreboard_id: scoreboard.scoreboard_id,
         name: scoreboard.name,
         game: scoreboard.game,
-        created_by: auth::db::UserResponse {
+        created_by: users::db::UserResponse {
             user_id: user.user_id,
             username: user.username,
             email: user.email,
@@ -118,23 +118,30 @@ pub async fn get_scoreboard(
 }
 
 /// gets all scoreboards where the created_by is the current user
-pub async fn get_me_scoreboards(
+pub async fn get_user_scoreboards(
+    user_id: i32,
     pool: Arc<PgPool>,
-    token: TokenData<Claims>,
 ) -> ResponseResult<impl warp::Reply> {
     // get all scoreboards for current user
-    let scoreboards_future = db::Scoreboard::get_scoreboards_by_user_id(&pool, &token.claims.sub);
+    let scoreboards_future = db::Scoreboard::get_scoreboards_by_user_id(&pool, &user_id);
 
     // get all teams for the scoreboards of the current user
-    let teams_future =
-        teams::db::Team::get_teams_by_scoreboard_created_by(&pool, &token.claims.sub);
+    let teams_future = teams::db::Team::get_teams_by_scoreboard_created_by(&pool, &user_id);
 
     // get the current user info
-    let user_future = auth::db::User::get_by_user_id(&pool, &token.claims.sub);
+    let user_future = users::db::User::get_by_user_id_option(&pool, &user_id);
 
     // run the queries in parallel
-    let (scoreboards, teams, user) =
+    let (scoreboards, teams, user_option) =
         future::try_join3(scoreboards_future, teams_future, user_future).await?;
+
+    // if the user doesnt exist return with a 404
+    if user_option.is_none() {
+        return Err(warp::reject::not_found());
+    }
+
+    // extract the user from the option
+    let user = user_option.unwrap();
 
     // group the teams into a hashmap
     let mut grouped_teams: HashMap<i32, Vec<teams::db::Team>> = HashMap::new();
@@ -152,7 +159,7 @@ pub async fn get_me_scoreboards(
             game: scoreboard.game,
             created_at: scoreboard.created_at,
             updated_at: scoreboard.updated_at,
-            created_by: auth::db::UserResponse {
+            created_by: users::db::UserResponse {
                 user_id: user.user_id,
                 username: user.username.clone(),
                 email: user.email.clone(),

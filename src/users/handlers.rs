@@ -13,7 +13,7 @@ use crate::errors::TalliiError;
 use crate::ResponseResult;
 
 //////////////////////////////////////////////////
-/// get user profile
+/// get my user profile
 //////////////////////////////////////////////////
 pub async fn get_me(
     pool: Arc<PgPool>,
@@ -31,6 +31,30 @@ pub async fn get_me(
     };
 
     Ok(warp::reply::json(&response))
+}
+
+//////////////////////////////////////////////////
+/// get a users profile
+//////////////////////////////////////////////////
+pub async fn get_user(
+    user_id: i32,
+    pool: Arc<PgPool>,
+    _token: TokenData<Claims>,
+) -> ResponseResult<impl warp::Reply> {
+    if let Some(user) = User::get_by_user_id_option(&pool, &user_id).await? {
+        let response = UserResponse {
+            user_id: user.user_id,
+            email: user.email,
+            username: user.username,
+            avatar_background: user.avatar_background,
+            avatar_emoji: user.avatar_emoji,
+            created_at: user.created_at,
+        };
+
+        return Ok(warp::reply::json(&response));
+    } else {
+        return Err(warp::reject::not_found());
+    }
 }
 
 //////////////////////////////////////////////////
