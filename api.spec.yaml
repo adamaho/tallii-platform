@@ -407,7 +407,6 @@ components:
         game:
           type: string
         created_by:
-          type: object
           $ref: '#/components/schemas/UserModel'
         created_at:
           type: string
