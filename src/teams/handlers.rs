@@ -54,21 +54,24 @@ pub async fn get_team(
         name: team.name,
         score: team.score,
         created_at: team.created_at,
-        players: players.into_iter().map(|p| {
-            return PlayerResponse {
-                team_player_id: p.team_player_id,
-                team_id: p.team_id,
-                created_at: p.player_created_at,
-                user: UserResponse {
-                    user_id: p.user_id,
-                    email: p.email,
-                    username: p.username,
-                    avatar_background: p.avatar_background,
-                    avatar_emoji: p.avatar_emoji,
-                    created_at: p.user_created_at,
-                }
-            }
-        }).collect()
+        players: players
+            .into_iter()
+            .map(|p| {
+                return PlayerResponse {
+                    team_player_id: p.team_player_id,
+                    team_id: p.team_id,
+                    created_at: p.player_created_at,
+                    user: UserResponse {
+                        user_id: p.user_id,
+                        email: p.email,
+                        username: p.username,
+                        avatar_background: p.avatar_background,
+                        avatar_emoji: p.avatar_emoji,
+                        created_at: p.user_created_at,
+                    },
+                };
+            })
+            .collect(),
     };
 
     Ok(warp::reply::json(&response))

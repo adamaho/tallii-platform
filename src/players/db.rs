@@ -27,11 +27,10 @@ pub struct PlayerRow {
 }
 
 impl Player {
-
-  /// gets all players for a specific team
-  pub async fn get_players_by_team_id(conn: &PgPool, team_id: &i32) -> Result<Vec<PlayerRow>> {
-    sqlx::query_as::<_, PlayerRow>(
-      r#"
+    /// gets all players for a specific team
+    pub async fn get_players_by_team_id(conn: &PgPool, team_id: &i32) -> Result<Vec<PlayerRow>> {
+        sqlx::query_as::<_, PlayerRow>(
+            r#"
         select
           p.team_player_id,
           p.team_id,
@@ -50,11 +49,11 @@ impl Player {
           p.user_id = u.user_id
         where
           team_id = $1
-      "#
-    )
-    .bind(team_id)
-    .fetch_all(conn)
-    .await
-    .map_err(|e| TalliiError::DatabaseError(e.to_string()))
-  }
+      "#,
+        )
+        .bind(team_id)
+        .fetch_all(conn)
+        .await
+        .map_err(|e| TalliiError::DatabaseError(e.to_string()))
+    }
 }
