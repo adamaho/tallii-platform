@@ -3,6 +3,7 @@ use std::sync::Arc;
 
 pub mod config;
 pub mod errors;
+pub mod players;
 pub mod routes;
 pub mod scoreboards;
 pub mod search;

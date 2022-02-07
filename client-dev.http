@@ -1,4 +1,4 @@
-@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYXBwcmV2aWV3QHRhbGxpaS5pbyIsImV4cCI6MTY0NTA0NDE1N30.AQaNN7FNcTTIz0WJ_wmpb8MauleMu7C8oHVjsn72_S0
+@token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRhbUBnbWFpbC5jb20iLCJleHAiOjE2NDY4NDc2OTd9.8OWGoLTaR1qXTJyIy5P15n36KJddPJIkkJ7_nTPaUV4
 
 # Endpoint that should be called to verify a jwt
 GET http://localhost:6000/v1/authorize HTTP/1.1
@@ -18,7 +18,7 @@ POST http://localhost:6000/v1/login HTTP/1.1
 content-type: application/json
 
 {
-  "email": "appreview@tallii.io",
+  "email": "adam@gmail.com",
   "password": "apple1"
 }
 
@@ -28,8 +28,8 @@ POST http://localhost:6000/v1/signup HTTP/1.1
 content-type: application/json
 
 {
-  "username": "blowtorch",
-  "email": "blowtorch@gmail.com",
+  "username": "adam",
+  "email": "adam@gmail.com",
   "password": "apple1"
 }
 
@@ -105,3 +105,8 @@ Authorization: Bearer {{ token }}
   "name": "this is a name",
   "score": 20
 }
+
+###
+
+GET http://localhost:6000/v1/teams/1 HTTP/1.1
+Authorization: Bearer {{ token }}
