@@ -83,10 +83,12 @@ Authorization: Bearer {{ token }}
   "game": "backgammon",
   "teams": [
     {
-      "name": "hill beavers"
+      "name": "hill beavers",
+      "players": [1]
     },
     {
-      "name": "arctic lions"
+      "name": "arctic lions",
+      "players": [1]
     }
   ]
 }

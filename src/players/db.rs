@@ -1,4 +1,4 @@
-use sqlx::PgPool;
+use sqlx::{Postgres, Transaction, PgPool};
 
 use crate::errors::TalliiError;
 use crate::Result;
@@ -55,5 +55,24 @@ impl Player {
         .fetch_all(conn)
         .await
         .map_err(|e| TalliiError::DatabaseError(e.to_string()))
+    }
+
+    /// create players in a transaction
+    pub async fn create_player(tx: &mut Transaction<'_, Postgres>, team_id: &i32, player: &i32) -> Result<Player> {
+      sqlx::query_as::<_, Player>(
+        r#"
+        insert into
+            teams_players (team_id, user_id)
+        values
+          ($1, $2)
+        returning
+          *
+        "#
+      )
+      .bind(team_id)
+      .bind(player)
+      .fetch_one(tx)
+      .await
+      .map_err(|e| TalliiError::DatabaseError(e.to_string()))
     }
 }

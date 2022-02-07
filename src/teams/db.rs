@@ -2,12 +2,13 @@ use serde::{Deserialize, Serialize};
 use sqlx::{FromRow, PgPool, Postgres, Transaction};
 
 use crate::errors::TalliiError;
+use crate::players::db::Player;
 use crate::Result;
 
 use super::handlers::UpdateTeamRequest;
 
 #[derive(FromRow, Serialize, Debug)]
-pub struct Team {
+pub struct TeamRow {
     pub team_id: i32,
     pub scoreboard_id: i32,
     pub name: String,
@@ -18,12 +19,15 @@ pub struct Team {
 #[derive(Deserialize)]
 pub struct CreateTeamPayload {
     pub name: String,
+    pub players: Vec<i32>,
 }
+
+pub struct Team;
 
 impl Team {
     /// fetches all teams
-    pub async fn get_teams(conn: &PgPool) -> Result<Vec<Team>> {
-        sqlx::query_as::<_, Team>(
+    pub async fn get_teams(conn: &PgPool) -> Result<Vec<TeamRow>> {
+        sqlx::query_as::<_, TeamRow>(
             r#"
                 select
                     *
@@ -40,8 +44,8 @@ impl Team {
     pub async fn get_teams_by_scoreboard_id(
         conn: &PgPool,
         scoreboard_id: &i32,
-    ) -> Result<Vec<Team>> {
-        sqlx::query_as::<_, Team>(
+    ) -> Result<Vec<TeamRow>> {
+        sqlx::query_as::<_, TeamRow>(
             r#"
                 select
                     *
@@ -61,8 +65,8 @@ impl Team {
     pub async fn get_teams_by_scoreboard_created_by(
         conn: &PgPool,
         user_id: &i32,
-    ) -> Result<Vec<Team>> {
-        sqlx::query_as::<_, Team>(
+    ) -> Result<Vec<TeamRow>> {
+        sqlx::query_as::<_, TeamRow>(
             r#"
               select
                   team_id, t.scoreboard_id, t.name, t.score, t.created_at
@@ -85,8 +89,8 @@ impl Team {
     }
 
     /// fetches a single team
-    pub async fn get_team(conn: &PgPool, team_id: &i32) -> Result<Team> {
-        sqlx::query_as::<_, Team>(
+    pub async fn get_team(conn: &PgPool, team_id: &i32) -> Result<TeamRow> {
+        sqlx::query_as::<_, TeamRow>(
             r#"
                 select
                     *
@@ -107,34 +111,32 @@ impl Team {
         tx: &mut Transaction<'_, Postgres>,
         teams: &Vec<CreateTeamPayload>,
         scoreboard_id: &i32,
-    ) -> Result<Team> {
-        let mut names: Vec<&str> = Vec::new();
-        let mut scoreboard_ids: Vec<i32> = Vec::new();
-        let owned_scoreboard_id = scoreboard_id.to_owned();
-
-        // create the values
+    ) -> Result<()> {
+        // create each team one by one
         for team in teams.iter() {
-            names.push(&team.name);
-            scoreboard_ids.push(owned_scoreboard_id);
+            let created_team = sqlx::query_as::<_, TeamRow>(
+                r#"
+                    insert into
+                        teams (name, scoreboard_id)
+                    values
+                        ($1, $2)
+                    returning
+                        *
+                "#,
+            )
+            .bind(&team.name)
+            .bind(scoreboard_id)
+            .fetch_one(&mut *tx)
+            .await
+            .map_err(|e| TalliiError::DatabaseError(e.to_string()))?;
+
+            for player in team.players.clone().into_iter() {
+                // create each player one by one
+                Player::create_player(&mut *tx, &created_team.team_id, &player).await?;
+            }
         }
 
-        sqlx::query_as::<_, Team>(
-            r#"
-                insert into
-                    teams (name, scoreboard_id)
-                select
-                    *
-                from
-                    unnest($1, $2)
-                returning
-                    *
-            "#,
-        )
-        .bind(names)
-        .bind(scoreboard_ids)
-        .fetch_one(tx)
-        .await
-        .map_err(|e| TalliiError::DatabaseError(e.to_string()))
+        Ok(())
     }
 
     /// updates a specific team
@@ -142,8 +144,8 @@ impl Team {
         pool: &PgPool,
         team_id: &i32,
         payload: &UpdateTeamRequest,
-    ) -> Result<Team> {
-        sqlx::query_as::<_, Team>(
+    ) -> Result<TeamRow> {
+        sqlx::query_as::<_, TeamRow>(
             r#"
                 update
                     teams

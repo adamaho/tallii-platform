@@ -3,11 +3,11 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use warp::hyper::StatusCode;
 
+use itertools::Itertools;
+
 use jsonwebtoken::TokenData;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
-
-use itertools::Itertools;
 
 use crate::teams::db::CreateTeamPayload;
 use crate::users::token::Claims;
@@ -34,7 +34,7 @@ pub struct ScoreboardResponse {
     pub created_by: users::db::UserResponse,
     pub created_at: chrono::DateTime<chrono::offset::Utc>,
     pub updated_at: chrono::DateTime<chrono::offset::Utc>,
-    pub teams: Option<Vec<teams::db::Team>>,
+    pub teams: Option<Vec<teams::db::TeamRow>>,
 }
 
 async fn get_scoreboard_response(
@@ -144,9 +144,9 @@ pub async fn get_user_scoreboards(
     let user = user_option.unwrap();
 
     // group the teams into a hashmap
-    let mut grouped_teams: HashMap<i32, Vec<teams::db::Team>> = HashMap::new();
+    let mut grouped_teams: HashMap<i32, Vec<teams::db::TeamRow>> = HashMap::new();
     for (scoreboard_id, teams) in &teams.into_iter().group_by(|team| team.scoreboard_id) {
-        grouped_teams.insert(scoreboard_id, teams.collect::<Vec<teams::db::Team>>());
+        grouped_teams.insert(scoreboard_id, teams.collect::<Vec<teams::db::TeamRow>>());
     }
 
     // build the response
