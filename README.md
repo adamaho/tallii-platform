@@ -6,8 +6,8 @@ The backend service for the tallii scoreboard app. Tallii is now an open-sourced
 
 ### Prerequisites
 
-Rust - [Install](https://www.rust-lang.org/tools/install).
-Docker Compose - [Install](https://docs.docker.com/compose/install/)
+- Rust: [Install](https://www.rust-lang.org/tools/install).
+- Docker Compose: [Install](https://docs.docker.com/compose/install/)
 
 ### Setting up the database
 
